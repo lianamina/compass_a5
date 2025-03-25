@@ -36,7 +36,22 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ep6-I2-jLt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1091" y="-2"/>
+            <point key="canvasLocation" x="2005" y="-2"/>
+        </scene>
+        <!--Viewitinerary View Controller-->
+        <scene sceneID="pTi-hh-tXw">
+            <objects>
+                <viewController id="cUU-xg-cdR" customClass="viewitineraryViewController" customModule="compass" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xHh-w6-0f7">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="UOi-9J-eHT"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="C8C-VI-Pdb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1069" y="-2"/>
         </scene>
     </scenes>
     <resources>
