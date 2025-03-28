@@ -84,13 +84,40 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8j3-9g-ao4">
-                                <rect key="frame" x="28" y="74" width="337" height="697"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oUy-Tt-SNv">
-                                <rect key="frame" x="0.0" y="45" width="393" height="739"/>
+                                <rect key="frame" x="0.0" y="39" width="393" height="715"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8j3-9g-ao4">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="715"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="My Trip to Paris" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Jc-ul-yO3">
+                                                <rect key="frame" x="35" y="9" width="326" height="47"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="AGG-eF-9ax">
+                                                <rect key="frame" x="35" y="324" width="336" height="326"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4UX-IF-MCh">
+                                                <rect key="frame" x="18" y="64" width="353" height="163"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </stackView>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Wo0-eg-a2G">
+                                                <rect key="frame" x="18" y="244" width="353" height="32"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <segments>
+                                                    <segment title="Day 1"/>
+                                                    <segment title="Day 2"/>
+                                                </segments>
+                                            </segmentedControl>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    </view>
+                                </subviews>
                                 <viewLayoutGuide key="contentLayoutGuide" id="FWB-p1-IKv"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="SCc-Qj-ksr"/>
                             </scrollView>
@@ -115,7 +142,11 @@
                     <connections>
                         <outlet property="bottomTabBar" destination="KzA-XD-BPu" id="IIo-fH-BbB"/>
                         <outlet property="contentView" destination="8j3-9g-ao4" id="wcC-CP-PNW"/>
+                        <outlet property="dayTabs" destination="Wo0-eg-a2G" id="ezQ-XG-NjC"/>
+                        <outlet property="headerLabel" destination="3Jc-ul-yO3" id="Aab-by-Acp"/>
+                        <outlet property="itineraryStack" destination="AGG-eF-9ax" id="4bO-iX-axZ"/>
                         <outlet property="scrollView" destination="oUy-Tt-SNv" id="rvO-t6-xfS"/>
+                        <outlet property="tripDetailsStack" destination="4UX-IF-MCh" id="a8E-FW-lhF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C8C-VI-Pdb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
