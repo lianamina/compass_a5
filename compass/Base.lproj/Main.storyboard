@@ -94,6 +94,15 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="FWB-p1-IKv"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="SCc-Qj-ksr"/>
                             </scrollView>
+                            <tabBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KzA-XD-BPu">
+                                <rect key="frame" x="0.0" y="754" width="393" height="49"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <items>
+                                    <tabBarItem systemItem="favorites" id="4xw-YN-hIh"/>
+                                    <tabBarItem systemItem="more" id="SsX-m0-jtu"/>
+                                </items>
+                            </tabBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="UOi-9J-eHT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -104,6 +113,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="kvz-QJ-Pvf"/>
                     <connections>
+                        <outlet property="bottomTabBar" destination="KzA-XD-BPu" id="IIo-fH-BbB"/>
                         <outlet property="contentView" destination="8j3-9g-ao4" id="wcC-CP-PNW"/>
                         <outlet property="scrollView" destination="oUy-Tt-SNv" id="rvO-t6-xfS"/>
                     </connections>

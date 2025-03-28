@@ -11,6 +11,9 @@ class viewitineraryViewController: UIViewController {
 
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentView: UIView!
+    
+    @IBOutlet weak var bottomTabBar: UITabBar!
+    
 
     override func viewDidLoad() {
             super.viewDidLoad()
@@ -20,6 +23,7 @@ class viewitineraryViewController: UIViewController {
             setupTripDetails()
             setupDayTabs()
             setupItineraryList()
+            setupBottomTabBar()
         }
 
         func setupScrollViewConstraints() {
@@ -191,4 +195,51 @@ class viewitineraryViewController: UIViewController {
 
             return item
         }
-    }
+    
+    func setupBottomTabBar() {
+              // Configure tab bar
+              bottomTabBar.delegate = self
+              
+              // Create tab bar items
+              let homeItem = UITabBarItem(title: nil, image: UIImage(systemName: "house"), tag: 0)
+              let mapItem = UITabBarItem(title: nil, image: UIImage(systemName: "map"), tag: 1)
+              let favoritesItem = UITabBarItem(title: nil, image: UIImage(systemName: "heart"), tag: 2)
+              let profileItem = UITabBarItem(title: nil, image: UIImage(systemName: "person"), tag: 3)
+              
+              bottomTabBar.items = [homeItem, mapItem, favoritesItem, profileItem]
+              bottomTabBar.selectedItem = mapItem
+              
+              // Add orange dot indicator for selected tab
+              let indicatorView = UIView()
+              indicatorView.backgroundColor = .systemOrange
+              indicatorView.layer.cornerRadius = 3
+              indicatorView.translatesAutoresizingMaskIntoConstraints = false
+              
+              bottomTabBar.addSubview(indicatorView)
+              
+              NSLayoutConstraint.activate([
+                  indicatorView.centerXAnchor.constraint(equalTo: bottomTabBar.centerXAnchor),
+                  indicatorView.bottomAnchor.constraint(equalTo: bottomTabBar.bottomAnchor, constant: -8),
+                  indicatorView.widthAnchor.constraint(equalToConstant: 6),
+                  indicatorView.heightAnchor.constraint(equalToConstant: 6)
+              ])
+          }
+      }
+
+      // MARK: - UITabBarDelegate
+      extension viewitineraryViewController: UITabBarDelegate {
+          func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+              // Update the orange dot position
+              if let indicatorView = tabBar.subviews.last,
+                 let items = tabBar.items,
+                 let index = items.firstIndex(of: item),
+                 let tabBarButtons = tabBar.subviews.filter({ $0.isKind(of: NSClassFromString("UITabBarButton")!) }) as? [UIView] {
+                  
+                  let selectedButton = tabBarButtons[index]
+                  
+                  UIView.animate(withDuration: 0.3) {
+                      indicatorView.center.x = selectedButton.center.x
+                  }
+              }
+          }
+      }
