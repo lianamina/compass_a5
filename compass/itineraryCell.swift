@@ -20,8 +20,23 @@ class itineraryCell: UICollectionViewCell {
             itineraryImageView.image = UIImage(systemName: "photo") //placeholder if image doesnt work
         }
         // Make image smaller with rounded corners
-               itineraryImageView.contentMode = .scaleAspectFill
-               itineraryImageView.clipsToBounds = true
-               itineraryImageView.layer.cornerRadius = 8
+        itineraryImageView.contentMode = .scaleAspectFill
+        itineraryImageView.clipsToBounds = true
+        itineraryImageView.layer.cornerRadius = 4
+        
+    }
+    
+    func configureAsCreateButton() {
+        itineraryTitleLabel.text = ""
+        itineraryTitleLabel.textAlignment = .center
+        itineraryTitleLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        itineraryImageView.image = UIImage(systemName: "doc.badge.plus")
+        
+        itineraryImageView.tintColor = .darkGray
+        itineraryImageView.contentMode = .center
+
+        contentView.backgroundColor = UIColor.systemGray5
+        contentView.layer.cornerRadius = 8
+        
     }
 }
