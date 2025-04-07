@@ -10,8 +10,8 @@ import UIKit
 // MARK: - Info Class
 class Info {
     var name: String
-    var flights: [String]
-    var stays: [String]
+    var flights: String
+    var stays: String
     var numberOfDays: Int
     var startdate: String
     var enddate: String
@@ -19,7 +19,7 @@ class Info {
     var activities: [Activity]  // ⬅️ Activities specific to this trip
     var tag: Int
     
-    init(name: String, flights: [String], stays: [String], numberOfDays: Int, startdate: String, enddate: String, imagename: String, activities: [Activity], tag: Int) {
+    init(name: String, flights: String, stays: String, numberOfDays: Int, startdate: String, enddate: String, imagename: String, activities: [Activity], tag: Int) {
         self.name = name
         self.flights = flights
         self.stays = stays

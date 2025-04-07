@@ -40,8 +40,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
         let trip1 = Info(
             name: "Hawaii Family Reunion",
-            flights: ["UA123"],
-            stays: ["Hotel Les Halles"],
+            flights: "UA123",
+            stays: "Hotel Les Halles",
             numberOfDays: 3,
             startdate: "5/15/25",
             enddate: "5/20/25",
@@ -52,8 +52,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         )
         let trip2 = Info(
             name: "Bachelorette in Vegas",
-            flights: ["UA123"],
-            stays: ["Hotel Les Halles"],
+            flights: "UA123",
+            stays: "Hotel Les Halles",
             numberOfDays: 3,
             startdate: "6/1/25",
             enddate: "6/8/25",
@@ -64,8 +64,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         let trip3 = Info(
             name: "Lake Tahoe Trip",
-            flights: ["UA123"],
-            stays: ["Hotel Les Halles"],
+            flights: "UA123",
+            stays: "Hotel Les Halles",
             numberOfDays: 3,
             startdate: "7/13/25",
             enddate: "7/21/25",
@@ -75,8 +75,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         )
         let trip4 = Info(
             name: "Italian Summer",
-            flights: ["UA123"],
-            stays: ["Hotel Les Halles"],
+            flights: "UA123",
+            stays: "Hotel Les Halles",
             numberOfDays: 3,
             startdate: "8/3/25",
             enddate: "8/17/25",
