@@ -11,12 +11,10 @@ class viewitineraryViewController: UIViewController {
 
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentView: UIView!
-    
     @IBOutlet weak var headerLabel: UILabel!
     @IBOutlet weak var tripDetailsStack: UIStackView!
     @IBOutlet weak var dayTabs: UISegmentedControl!
     @IBOutlet weak var itineraryStack: UIStackView!
-    
     @IBOutlet weak var bottomTabBar: UITabBar!
     
 
@@ -40,7 +38,6 @@ class viewitineraryViewController: UIViewController {
                 scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
                 scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
                 contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
                 contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
                 contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -232,7 +229,6 @@ class viewitineraryViewController: UIViewController {
         
     }
 
-    // MARK: - UITabBarDelegate
     extension viewitineraryViewController: UITabBarDelegate {
         func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
             // Update the orange dot position

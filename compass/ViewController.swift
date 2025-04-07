@@ -33,6 +33,64 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // hello
+        let activity1 = Activity(title: "Louvre", currentTime: 86400, picture: UIImage(named: "louvre")!, yesVotes: 6, noVotes: 4)
+        let activity2 = Activity(title: "Eiffel Tower", currentTime: 86400, picture: UIImage(named: "eiffel")!, yesVotes: 7, noVotes: 3)
+
+        let trip1 = Info(
+            name: "Hawaii Family Reunion",
+            flights: ["UA123"],
+            stays: ["Hotel Les Halles"],
+            numberOfDays: 3,
+            startdate: "5/15/25",
+            enddate: "5/20/25",
+            imagename: "hawaii",
+            activities: [activity1, activity2],
+            tag: 1
+            
+        )
+        let trip2 = Info(
+            name: "Bachelorette in Vegas",
+            flights: ["UA123"],
+            stays: ["Hotel Les Halles"],
+            numberOfDays: 3,
+            startdate: "6/1/25",
+            enddate: "6/8/25",
+            imagename: "vegas",
+            activities: [activity1, activity2],
+            tag: 2
+        )
+        
+        let trip3 = Info(
+            name: "Lake Tahoe Trip",
+            flights: ["UA123"],
+            stays: ["Hotel Les Halles"],
+            numberOfDays: 3,
+            startdate: "7/13/25",
+            enddate: "7/21/25",
+            imagename: "tahoe",
+            activities: [activity1, activity2],
+            tag: 3
+        )
+        let trip4 = Info(
+            name: "Italian Summer",
+            flights: ["UA123"],
+            stays: ["Hotel Les Halles"],
+            numberOfDays: 3,
+            startdate: "8/3/25",
+            enddate: "8/17/25",
+            imagename: "rome",
+            activities: [activity1, activity2],
+            tag: 4
+        )
+
+        DataManager.shared.allItineraries.append(trip1)
+        DataManager.shared.allItineraries.append(trip2)
+        DataManager.shared.allItineraries.append(trip3)
+        DataManager.shared.allItineraries.append(trip4)
+
+        
         // Do any additional setup after loading the view.
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -75,13 +133,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         collectionView.reloadData()
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "itinCellToEditEventVC" {
-            if let editVC = segue.destination as? EditEventVC {
-                editVC.delegate = self
-            }
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "itinCellToEditEventVC" {
+//            if let editVC = segue.destination as? EditEventVC {
+//                editVC.delegate = self
+//            }
+//        }
+//    }
     
     var featuredItineraries = [
         nil, //for create new itinerary button
@@ -91,11 +149,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         Itinerary(title: "Week in Tokyo", startDate: "", endDate: "", imageName: "glass")
     ]
     
-    var allItineraries = [ Itinerary(title: "Hawaii Family Reunion", startDate: "5/15/25", endDate: "5/20/25", imageName: "hawaii"),
-        Itinerary(title: "Bachelorette in Vegas", startDate: "6/1/25", endDate: "6/8/25", imageName: "vegas"),
-        Itinerary(title: "Lake Tahoe Trip", startDate: "7/13/25", endDate: "7/21/25", imageName: "tahoe"),
-        Itinerary(title: "Italian Summer", startDate: "8/3/25", endDate: "8/17/25", imageName: "rome")
-    ]
+
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == 0 { // Assuming first item is the "+" button
@@ -127,15 +181,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     
     // TABLE VIEW FUNCTIONS START BELOW
-    
+//    DataManager.shared.trips
+//    DataManager.shared.activities
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return allItineraries.count
+        return DataManager.shared.allItineraries.count
         }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: "itinTableViewCell", for: indexPath) as! ItineraryTableViewCell
             
-            let itinerary = allItineraries[indexPath.row]
+            let itinerary = DataManager.shared.allItineraries[indexPath.row]
             cell.configure(with: itinerary)
             
             return cell
@@ -143,9 +199,21 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     //come back to this
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            let selectedItinerary = allItineraries[indexPath.row]
+            let selectedItinerary = DataManager.shared.allItineraries[indexPath.row]
         
             // Navigate to a detailed view if needed
         }
+    @IBAction func viewbuttonpressed(_ sender: Any) {
+        performSegue(withIdentifier: "viewpagesegue", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "viewpagesegue" {
+            if segue.destination is viewitineraryViewController {
+                
+            }
+        }
+    }
+
 }
 

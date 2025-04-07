@@ -9,10 +9,20 @@ import UIKit
 
 
 class EditEventVC: UIViewController {
-    
-    weak var delegate: ItineraryCreationDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         // Additional setup
     }
+    
+    @IBAction func `switch`(_ sender: Any) {
+    }
+    @IBAction func flights(_ sender: Any) {
+    }
+    @IBAction func stay(_ sender: Any) {
+    }
+    @IBAction func title(_ sender: Any) {
+    }
+    
+    
+
 }

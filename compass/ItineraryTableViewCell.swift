@@ -14,12 +14,12 @@ class ItineraryTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     
-    func configure(with itinerary: Itinerary) {
-        titleLabel.text = itinerary.title
+    func configure(with itinerary: Info) {
+        titleLabel.text = itinerary.name
         titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
         titleLabel.numberOfLines = 1
         
-        dateLabel.text = "\(itinerary.startDate) - \(itinerary.endDate)"
+        dateLabel.text = "\(itinerary.startdate) - \(itinerary.enddate)"
         dateLabel.font = UIFont.boldSystemFont(ofSize: 14)
         dateLabel.textColor = .gray
         dateLabel.numberOfLines = 1

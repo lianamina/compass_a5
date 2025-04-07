@@ -1,30 +1,14 @@
 import UIKit
 
-class votingActivities {
-    var title: String
-    var currenttime: Double
-    var picture: UIImage
-    var yesVotes: Int
-    var noVotes: Int
-    // Initializer for creating new objects of votingActivities
-    init(title: String, currenttime: Double, picture: UIImage, yesVotes: Int, noVotes: Int) {
-        self.title = title
-        self.currenttime = currenttime
-        self.picture = picture
-        self.yesVotes = yesVotes
-        self.noVotes = noVotes
-    }
-}
 
 
-
+var allActivities: [Activity] = []
+var itineraryTag: Int = 1
 
 class VotingViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
     
-    var activitesList:[votingActivities] = []
-
     let totalnumberofpeople = 10
     var numrow = 0
     let textCellIdentifier = "TextCell"
@@ -35,6 +19,10 @@ class VotingViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == itineraryTag }) {
+            allActivities = itinerary.activities
+        }
+        tableView.reloadData()
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -42,35 +30,19 @@ class VotingViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Enable dynamic row sizing
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 200
-        createnewactivites()
         
     }
 
-    
-    // this will not be here is only hardcoded for debugging
-    func createnewactivites() {
-        // Create new activities and add them to the activitiesList array
-        let activity1 = votingActivities(title: "Eiffel Tower", currenttime: 3000.0, picture: UIImage(named: "paris")!, yesVotes: 3, noVotes: 1)
-        let activity2 = votingActivities(title: "Cafe Paris", currenttime: 120.0, picture: UIImage(named: "cafeparis")!, yesVotes: 2, noVotes: 2)
-        let activity3 = votingActivities(title: "Louvre", currenttime: 140.0, picture: UIImage(named: "glass")!, yesVotes: 1, noVotes: 2)
-        
-        // Add these new activities to the activitiesList
-        activitesList.append(activity1)
-        activitesList.append(activity2)
-        activitesList.append(activity3)
-        
-        numrow = activitesList.count
-        // Reload the table view to display the activities
-        tableView.reloadData()
-    }
+
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return numrow
+        return allActivities.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: textCellIdentifier, for: indexPath)
-        let activity = activitesList[indexPath.row]
+
+        let activity = allActivities[indexPath.row]
 
         // Make sure previous timer is invalidated before creating a new one
         timers[indexPath]?.invalidate()
@@ -84,9 +56,13 @@ class VotingViewController: UIViewController, UITableViewDelegate, UITableViewDa
         countdownLabel.text = "00:00:00" // Placeholder text
         cell.contentView.addSubview(countdownLabel)
 
-        // Simulate event end time (e.g., 2 minutes from now)
-        let endTime = eventEndTimes[indexPath] ?? Date().addingTimeInterval(activity.currenttime)
+
+
+        // Store it in eventEndTimes
+        let endTime = eventEndTimes[indexPath] ?? Date().addingTimeInterval(activity.currentTime)
+        
         eventEndTimes[indexPath] = endTime
+
 
         // Create a timer that updates every second
         timers[indexPath] = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
@@ -241,7 +217,7 @@ class VotingViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @objc func yesButtonPressed(_ sender: UIButton) {
         // Find the cell using the tag
         if let cell = sender.superview?.superview as? UITableViewCell, let indexPath = tableView.indexPath(for: cell)  {
-            let activity = activitesList[indexPath.row]
+            let activity = allActivities[indexPath.row]
             activity.yesVotes += 1
             
             if let yesButton = cell.contentView.viewWithTag(100) {
@@ -276,7 +252,7 @@ class VotingViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @objc func noButtonPressed(_ sender: UIButton) {
         // Find the cell using the tag
         if let cell = sender.superview?.superview as? UITableViewCell, let indexPath = tableView.indexPath(for: cell)  {
-            let activity = activitesList[indexPath.row]
+            let activity = allActivities[indexPath.row]
             activity.noVotes += 1
             if let yesButton = cell.contentView.viewWithTag(100) {
                 yesButton.isHidden = true  // Hide the Yes button
