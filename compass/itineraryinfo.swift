@@ -16,11 +16,12 @@ class Info {
     var startdate: String
     var enddate: String
     var imageName: String
-    var activities: [Int: [Activity]]
+    var activitiesforday: [Int: [Activity]]
+    var activitiesforvoting: [Activity]
     var tag: Int
     var numdays: Int
     
-    init(name: String, flights: String, stays: String, numberOfDays: Int, startdate: String, enddate: String, imagename: String, activities: [Int: [Activity]], tag: Int, numdays: Int) {
+    init(name: String, flights: String, stays: String, numberOfDays: Int, startdate: String, enddate: String, imagename: String, activitiesforday: [Int: [Activity]], activitiesforvoting: [Activity], tag: Int, numdays: Int) {
         self.name = name
         self.flights = flights
         self.stays = stays
@@ -28,7 +29,8 @@ class Info {
         self.startdate = startdate
         self.enddate = enddate
         self.imageName = imagename
-        self.activities = activities
+        self.activitiesforday = activitiesforday
+        self.activitiesforvoting = activitiesforvoting
         self.tag = tag
         self.numdays = numdays
 
@@ -42,13 +44,15 @@ class Activity {
     var picture: UIImage
     var yesVotes: Int
     var noVotes: Int
+    var didvote: Bool
     
-    init(title: String, currentTime: Double, picture: UIImage, yesVotes: Int = 0, noVotes: Int = 0) {
+    init(title: String, currentTime: Double, picture: UIImage, yesVotes: Int = 0, noVotes: Int = 0, didvote: Bool = false) {
         self.title = title
         self.currentTime = currentTime
         self.picture = picture
         self.yesVotes = yesVotes
         self.noVotes = noVotes
+        self.didvote = didvote
     }
 }
 

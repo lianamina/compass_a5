@@ -19,12 +19,28 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
     var numdays: Int = 0
     var activitiesForDisplay: [Activity] = []
     var currtag = 0;
+    var noActivitiesLabel: UILabel!
 
     let textCellIdentifier = "TextCell"
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        // basically ignore this
+        noActivitiesLabel = UILabel()
+        noActivitiesLabel.text = "No activities added for this day"
+        noActivitiesLabel.textColor = .gray
+        noActivitiesLabel.font = UIFont.systemFont(ofSize: 18)
+        noActivitiesLabel.textAlignment = .center
+        noActivitiesLabel.translatesAutoresizingMaskIntoConstraints = false
+        noActivitiesLabel.isHidden = true // Initially hidden
+        view.addSubview(noActivitiesLabel)
+        NSLayoutConstraint.activate([
+            noActivitiesLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            noActivitiesLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            noActivitiesLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            noActivitiesLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+        ])
+        
         tableView.delegate = self
         tableView.dataSource = self
         // Enable dynamic row sizing
@@ -43,7 +59,7 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
             staylabel.text = itinerary.stays
             flightlabel.text = itinerary.flights
             numdays = itinerary.numdays
-            allActivities = itinerary.activities
+            allActivities = itinerary.activitiesforday
         }
         tripTypeSegmentedControl.removeAllSegments()
 
@@ -61,7 +77,6 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var tableView: UITableView!
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(allActivities.count)
         return activitiesForDisplay.count
     }
 
@@ -87,6 +102,24 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
             imageView.layer.cornerRadius = 8
             imageView.translatesAutoresizingMaskIntoConstraints = false
             cell.contentView.addSubview(imageView)
+        
+            var votebutton: UIButton
+            if let existingButton = cell.contentView.viewWithTag(100) as? UIButton {
+                votebutton = existingButton
+            } else {
+                // Create a new button if it doesn't exist
+                votebutton = UIButton(type: .system)
+                votebutton.setTitle("Vote", for: .normal)
+                votebutton.setTitleColor(.white, for: .normal)
+                votebutton.backgroundColor = .systemOrange
+                votebutton.layer.cornerRadius = 8
+                votebutton.tag = 100 // Assign a tag to identify the button
+                votebutton.translatesAutoresizingMaskIntoConstraints = false
+                cell.contentView.addSubview(votebutton)
+            }
+            votebutton.addTarget(self, action: #selector(voteButtonPressed(_:)), for: .touchUpInside)
+            // Set the visibility of the button based on the didvote property
+            votebutton.isHidden = activity.didvote
             
             
             NSLayoutConstraint.activate([
@@ -94,23 +127,45 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
                 titleLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
                 titleLabel.widthAnchor.constraint(equalToConstant: 500),
                 titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 20),
-                titleLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30),
+//                titleLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30),
                 // Image view constraints (right side)
                 imageView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
                 imageView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
                 imageView.widthAnchor.constraint(equalToConstant: 120),
                 imageView.heightAnchor.constraint(equalToConstant: 120),
-                imageView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30)
+                imageView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30),
+
+                votebutton.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
+                votebutton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+                votebutton.widthAnchor.constraint(equalToConstant: 80),
+                votebutton.heightAnchor.constraint(equalToConstant: 30),
+                votebutton.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30)
                 
             ])
         
         return cell
     }
+    @objc func voteButtonPressed(_ sender: UIButton) {
+        if let votingVC = self.storyboard?.instantiateViewController(withIdentifier: "VotingViewControllerID") as? VotingViewController {
+            
+            // Set any properties or data on the destination view controller
+            if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
+                votingVC.currtag = itinerary.tag
+            }
+            
+            // Present the view controller
+            self.present(votingVC, animated: true, completion: nil)
+        } else {
+            print("Error: VotingViewController not found")
+        }
+    }
+
+    
 
     // Action when the day is changed from the segmented control
     @IBAction func dayChanged(_ sender: UISegmentedControl) {
-        reloadActivitiesForSelectedDay()  // Reload activities for the selected day
-        tableView.reloadData()  // Reload table view data to reflect the new activities
+        tableView.reloadData()
+        reloadActivitiesForSelectedDay()
     }
 
     // Function to reload the activities for the selected day
@@ -119,11 +174,18 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
         activitiesForDisplay.removeAll()
 
         if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
-            if let activitiesForSelectedDay = itinerary.activities[selectedDay] {
+            if let activitiesForSelectedDay = itinerary.activitiesforday[selectedDay], !activitiesForSelectedDay.isEmpty {
+                // If there are activities for the selected day, set them for display
                 activitiesForDisplay = activitiesForSelectedDay
-                tableView.reloadData()
+                noActivitiesLabel.isHidden = true // Hide the label if activities are available
+            } else {
+                // Handle the case where there are no activities for this day
+                activitiesForDisplay = []
+                noActivitiesLabel.isHidden = false // Show the label if no activities are available
             }
         }
+
+        tableView.reloadData() // Reload table view after updating the data
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "editsegue" {
@@ -133,7 +195,14 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
                 }
             }
         }
-    }
+        if segue.identifier == "ShowVotingViewController",
+           let destinationVC = segue.destination as? VotingViewController {
+            if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
+               destinationVC.currtag = itinerary.tag
+                }
+            }
+        }
+    
 }
 
 

@@ -30,13 +30,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet weak var tableView: UITableView!
-    
+    var tagtosend = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // hello
-        let activity1 = Activity(title: "Louvre", currentTime: 86400, picture: UIImage(named: "louvre")!, yesVotes: 6, noVotes: 4)
-        let activity2 = Activity(title: "Eiffel Tower", currentTime: 86400, picture: UIImage(named: "eiffel")!, yesVotes: 7, noVotes: 3)
+        let activity1 = Activity(title: "Louvre", currentTime: 86400, picture: UIImage(named: "louvre")!, yesVotes: 6, noVotes: 4, didvote: true)
+        let activity2 = Activity(title: "Eiffel Tower", currentTime: 86400, picture: UIImage(named: "eiffel")!, yesVotes: 7, noVotes: 3, didvote: false)
 
         let trip1 = Info(
             name: "Hawaii Family Reunion",
@@ -46,7 +46,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             startdate: "5/15/25",
             enddate: "5/20/25",
             imagename: "hawaii",
-            activities: [1: [activity1], 2: [activity2]],
+            activitiesforday: [1: [activity1], 2: [activity2]],
+            activitiesforvoting: [activity1, activity2],
             tag: 1,
             numdays: 5
             
@@ -59,7 +60,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             startdate: "6/1/25",
             enddate: "6/8/25",
             imagename: "vegas",
-            activities: [1: [activity1, activity2]],
+            activitiesforday: [1: [activity1, activity2]],
+            activitiesforvoting: [activity1, activity2],
             tag: 2,
             numdays: 1
         )
@@ -72,7 +74,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             startdate: "7/13/25",
             enddate: "7/21/25",
             imagename: "tahoe",
-            activities: [1: [activity1, activity2]],
+            activitiesforday: [1: [activity1, activity2]],
+            activitiesforvoting: [activity1, activity2],
             tag: 3,
             numdays: 1
         )
@@ -84,7 +87,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             startdate: "8/3/25",
             enddate: "8/17/25",
             imagename: "rome",
-            activities: [1: [activity1, activity2]],
+            activitiesforday: [1: [activity1, activity2]],
+            activitiesforvoting: [activity1, activity2],
             tag: 4,
             numdays: 1
         )
@@ -197,24 +201,21 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             
             let itinerary = DataManager.shared.allItineraries[indexPath.row]
             cell.configure(with: itinerary)
-            
+            tagtosend = DataManager.shared.allItineraries[indexPath.row].tag
+
             return cell
         }
     
     //come back to this
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            let selectedItinerary = DataManager.shared.allItineraries[indexPath.row]
-        
-            // Navigate to a detailed view if needed
-        }
-    @IBAction func viewbuttonpressed(_ sender: Any) {
+        let selectedItinerary = DataManager.shared.allItineraries[indexPath.row]
         performSegue(withIdentifier: "viewpagesegue", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "viewpagesegue" {
-            if segue.destination is viewitineraryViewController {
-                
+            if let destinationVC = segue.destination as? viewitineraryViewController {
+                destinationVC.currtag = tagtosend
             }
         }
     }

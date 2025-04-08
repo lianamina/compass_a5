@@ -18,7 +18,7 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
     var eventTitle: String = ""
     var numdays: Int = 0
     var activitiesForDisplay: [Activity] = []
-    var currtag = 1;
+    var currtag: Int = 1
     let textCellIdentifier = "TextCell"
 
     override func viewDidLoad() {
@@ -39,7 +39,7 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
             stayTextField.text = itinerary.stays
             flightTextField.text = itinerary.flights
             numdays = itinerary.numdays
-            allActivities = itinerary.activities
+            allActivities = itinerary.activitiesforday
         }
         tripTypeSegmentedControl.removeAllSegments()
 
@@ -131,7 +131,7 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
         activitiesForDisplay.removeAll()
 
         if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
-            if let activitiesForSelectedDay = itinerary.activities[selectedDay] {
+            if let activitiesForSelectedDay = itinerary.activitiesforday[selectedDay] {
                 activitiesForDisplay = activitiesForSelectedDay
                 tableView.reloadData()
             }
@@ -177,7 +177,7 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
 
             // Sync activities back to the corresponding itinerary
             if let index = DataManager.shared.allItineraries.firstIndex(where: { $0.tag == self.currtag }) {
-                DataManager.shared.allItineraries[index].activities = allActivities
+                DataManager.shared.allItineraries[index].activitiesforday = allActivities
             }
 
             // Reload the table view if it's the selected day
