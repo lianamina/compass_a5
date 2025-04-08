@@ -16,10 +16,11 @@ class Info {
     var startdate: String
     var enddate: String
     var imageName: String
-    var activities: [Activity]  // ⬅️ Activities specific to this trip
+    var activities: [Int: [Activity]]
     var tag: Int
+    var numdays: Int
     
-    init(name: String, flights: String, stays: String, numberOfDays: Int, startdate: String, enddate: String, imagename: String, activities: [Activity], tag: Int) {
+    init(name: String, flights: String, stays: String, numberOfDays: Int, startdate: String, enddate: String, imagename: String, activities: [Int: [Activity]], tag: Int, numdays: Int) {
         self.name = name
         self.flights = flights
         self.stays = stays
@@ -29,6 +30,7 @@ class Info {
         self.imageName = imagename
         self.activities = activities
         self.tag = tag
+        self.numdays = numdays
 
     }
 }

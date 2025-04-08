@@ -46,8 +46,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             startdate: "5/15/25",
             enddate: "5/20/25",
             imagename: "hawaii",
-            activities: [activity1, activity2],
-            tag: 1
+            activities: [1: [activity1], 2: [activity2]],
+            tag: 1,
+            numdays: 5
             
         )
         let trip2 = Info(
@@ -58,8 +59,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             startdate: "6/1/25",
             enddate: "6/8/25",
             imagename: "vegas",
-            activities: [activity1, activity2],
-            tag: 2
+            activities: [1: [activity1, activity2]],
+            tag: 2,
+            numdays: 1
         )
         
         let trip3 = Info(
@@ -70,8 +72,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             startdate: "7/13/25",
             enddate: "7/21/25",
             imagename: "tahoe",
-            activities: [activity1, activity2],
-            tag: 3
+            activities: [1: [activity1, activity2]],
+            tag: 3,
+            numdays: 1
         )
         let trip4 = Info(
             name: "Italian Summer",
@@ -81,8 +84,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             startdate: "8/3/25",
             enddate: "8/17/25",
             imagename: "rome",
-            activities: [activity1, activity2],
-            tag: 4
+            activities: [1: [activity1, activity2]],
+            tag: 4,
+            numdays: 1
         )
 
         DataManager.shared.allItineraries.append(trip1)

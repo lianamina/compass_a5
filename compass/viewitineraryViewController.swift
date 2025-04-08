@@ -1,247 +1,142 @@
 //
-//  viewitineraryViewController.swift
+//  EditEventVC.swift
 //  compass
 //
-//  Created by Denise Ramos on 3/25/25.
+//  Created by Katherine Chao on 3/31/25.
 //
 
 import UIKit
 
-class viewitineraryViewController: UIViewController {
+// depending on if this is already made or a new one a nre tag needs to be made
+// need a bool if new or not
 
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var headerLabel: UILabel!
-    @IBOutlet weak var tripDetailsStack: UIStackView!
-    @IBOutlet weak var dayTabs: UISegmentedControl!
-    @IBOutlet weak var itineraryStack: UIStackView!
-    @IBOutlet weak var bottomTabBar: UITabBar!
+
+class viewitineraryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var flightInfo: String = ""
+    var stayInfo: String = ""
+    var eventTitle: String = ""
+    var numdays: Int = 0
+    var activitiesForDisplay: [Activity] = []
+    var currtag = 0;
+
+    let textCellIdentifier = "TextCell"
 
     override func viewDidLoad() {
-            super.viewDidLoad()
-            view.backgroundColor = .white
-            setupScrollViewConstraints()
-            setupHeader()
-            setupTripDetails()
-            setupDayTabs()
-            setupItineraryList()
-            setupBottomTabBar()
+        super.viewDidLoad()
+
+        tableView.delegate = self
+        tableView.dataSource = self
+        // Enable dynamic row sizing
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 200
+        populateinfo()
+
+    }
+    
+    @IBOutlet weak var staylabel: UILabel!
+    @IBOutlet weak var flightlabel: UILabel!
+    @IBOutlet weak var titlelabel: UILabel!
+    func populateinfo() {
+        if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
+            titlelabel.text = itinerary.name
+            staylabel.text = itinerary.stays
+            flightlabel.text = itinerary.flights
+            numdays = itinerary.numdays
+            allActivities = itinerary.activities
         }
+        tripTypeSegmentedControl.removeAllSegments()
 
-        func setupScrollViewConstraints() {
-            scrollView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.translatesAutoresizingMaskIntoConstraints = false
-
-            NSLayoutConstraint.activate([
-                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-                scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-            ])
+        for day in 1...numdays {
+            let title = "Day \(day)"
+            tripTypeSegmentedControl.insertSegment(withTitle: title, at: day - 1, animated: false)
         }
+            
+            tripTypeSegmentedControl.selectedSegmentIndex = 0
+            reloadActivitiesForSelectedDay()
+    }
+    
+    @IBOutlet weak var tripTypeSegmentedControl: UISegmentedControl!
 
-        func setupHeader() {
-            headerLabel.text = "My Trip to Paris 🇫🇷"
-            headerLabel.font = UIFont.boldSystemFont(ofSize: 25)
-            headerLabel.textAlignment = .center
-        }
+    @IBOutlet weak var tableView: UITableView!
 
-    func setupTripDetails() {
-        tripDetailsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
-
-        let flightCard = createCard(
-            title: "Flights",
-            details: """
-                Confirmation #: KPS43
-                Airline: United Airlines
-                Date: Thursday, July 14th
-                Departure: SFO 11:32am
-                Arrival: CDG 5:32pm
-            """,
-            imageName: "flight"
-        )
-        
-        let stayCard = createCard(title: "Stays", details: "Condo in Les Halles", imageName: "stay")
-
-        let stack = UIStackView(arrangedSubviews: [flightCard, stayCard])
-        stack.axis = .horizontal
-        stack.spacing = 16
-        stack.distribution = .fillEqually
-        stack.translatesAutoresizingMaskIntoConstraints = false
-
-        tripDetailsStack.addArrangedSubview(stack)
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(allActivities.count)
+        return activitiesForDisplay.count
     }
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        func setupDayTabs() {
-            dayTabs.removeAllSegments()
-            let days = ["Day 1", "Day 2", "Day 3"]
+        let cell = tableView.dequeueReusableCell(withIdentifier: textCellIdentifier, for: indexPath)
 
-            for (index, day) in days.enumerated() {
-                dayTabs.insertSegment(withTitle: day, at: index, animated: false)
-            }
-
-            dayTabs.selectedSegmentIndex = 1
-            dayTabs.selectedSegmentTintColor = .systemOrange
-        }
-
-        func setupItineraryList() {
-            itineraryStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
-
-            itineraryStack.axis = .vertical
-            itineraryStack.spacing = 16
-            itineraryStack.distribution = .equalSpacing
-
-            let locations = [
-                ("Louvre", "6/10", "glass"),
-                ("Eiffel Tower", "VOTE", "paris"),
-                ("Paris Catacombs", "VOTE", "catacombs"),
-                ("Florence Kahn", "2/10", "florence")
-            ]
-
-            for location in locations {
-                let item = createItineraryItem(title: location.0, votes: location.1, imageName: location.2)
-                itineraryStack.addArrangedSubview(item)
-            }
-        }
-
-        func createItineraryItem(title: String, votes: String, imageName: String) -> UIView {
-            let container = UIStackView()
-            container.axis = .horizontal
-            container.alignment = .center
-            container.spacing = 16
-
-            let labelsStack = UIStackView()
-            labelsStack.axis = .vertical
-            labelsStack.alignment = .leading
-            labelsStack.spacing = 4
-
+        let activity = activitiesForDisplay[indexPath.row]
+            
+            // Title label
             let titleLabel = UILabel()
-            titleLabel.text = title
-            titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
-
-            // Conditionally create either a button or label for the votes
-            let voteView: UIView
-
-            if votes == "VOTE" {
-                // Create a button for voting
-                let voteButton = UIButton(type: .system)
-                voteButton.setTitle(votes, for: .normal)
-                voteButton.setTitleColor(.white, for: .normal)
-                voteButton.backgroundColor = .systemOrange
-                voteButton.layer.cornerRadius = 10
-                voteButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-                voteButton.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
-                voteView = voteButton
-            } else {
-                // Create a label for displaying the fraction or any other text
-                let voteLabel = UILabel()
-                voteLabel.text = votes
-                voteLabel.font = UIFont.systemFont(ofSize: 16)
-                voteLabel.textColor = .black
-                voteView = voteLabel
-            }
-
-            // Set the image for each item based on the imageName passed
-            let imageView = UIImageView(image: UIImage(named: imageName))
+            titleLabel.text = activity.title
+            titleLabel.font = UIFont.boldSystemFont(ofSize: 25)
+            titleLabel.translatesAutoresizingMaskIntoConstraints = false
+            titleLabel.backgroundColor = UIColor.white
+            cell.contentView.addSubview(titleLabel)
+            
+            // Image View
+            let imageView = UIImageView()
+            imageView.image = activity.picture  // Replace with your image
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
-            imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-            imageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-
-            // Add arranged subviews
-            labelsStack.addArrangedSubview(titleLabel)
-            labelsStack.addArrangedSubview(voteView) // Add the button or label
-            container.addArrangedSubview(labelsStack)
-            container.addArrangedSubview(imageView)
-
-            return container
-        }
-
-
-        func setupBottomTabBar() {
-            bottomTabBar.delegate = self
-
-            // Tab bar items
-            let homeItem = UITabBarItem(title: nil, image: UIImage(systemName: "house"), tag: 0)
-            let mapItem = UITabBarItem(title: nil, image: UIImage(systemName: "map"), tag: 1)
-            let favoritesItem = UITabBarItem(title: nil, image: UIImage(systemName: "heart"), tag: 2)
-            let profileItem = UITabBarItem(title: nil, image: UIImage(systemName: "person"), tag: 3)
-
-            bottomTabBar.items = [homeItem, mapItem, favoritesItem, profileItem]
-            bottomTabBar.selectedItem = mapItem
-
-            // Add orange dot indicator for selected tab
-            let indicatorView = UIView()
-            indicatorView.backgroundColor = .systemOrange
-            indicatorView.layer.cornerRadius = 3
-            indicatorView.translatesAutoresizingMaskIntoConstraints = false
-
-            bottomTabBar.addSubview(indicatorView)
-
+            imageView.layer.cornerRadius = 8
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(imageView)
+            
+            
             NSLayoutConstraint.activate([
-                indicatorView.centerXAnchor.constraint(equalTo: bottomTabBar.centerXAnchor),
-                indicatorView.bottomAnchor.constraint(equalTo: bottomTabBar.bottomAnchor, constant: -8),
-                indicatorView.widthAnchor.constraint(equalToConstant: 6),
-                indicatorView.heightAnchor.constraint(equalToConstant: 6)
+                // Title label constraints
+                titleLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
+                titleLabel.widthAnchor.constraint(equalToConstant: 500),
+                titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 20),
+                titleLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30),
+                // Image view constraints (right side)
+                imageView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
+                imageView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
+                imageView.widthAnchor.constraint(equalToConstant: 120),
+                imageView.heightAnchor.constraint(equalToConstant: 120),
+                imageView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30)
+                
             ])
-        }
-
-        // Helper method to create card views
-        func createCard(title: String, details: String, imageName: String) -> UIView {
-            let card = UIView()
-            card.backgroundColor = .systemGray6
-            card.layer.cornerRadius = 12
-            card.translatesAutoresizingMaskIntoConstraints = false
-
-            let titleLabel = UILabel()
-            titleLabel.text = title
-            titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
-            titleLabel.translatesAutoresizingMaskIntoConstraints = false
-
-            let detailsLabel = UILabel()
-            detailsLabel.text = details
-            detailsLabel.textColor = .gray
-            detailsLabel.translatesAutoresizingMaskIntoConstraints = false
-
-            let stack = UIStackView(arrangedSubviews: [titleLabel, detailsLabel])
-            stack.axis = .vertical
-            stack.spacing = 4
-            stack.translatesAutoresizingMaskIntoConstraints = false
-
-            card.addSubview(stack)
-
-            NSLayoutConstraint.activate([
-                stack.topAnchor.constraint(equalTo: card.topAnchor, constant: 8),
-                stack.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 8),
-                stack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -8)
-            ])
-
-            return card
-        }
-
         
+        return cell
     }
 
-    extension viewitineraryViewController: UITabBarDelegate {
-        func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-            // Update the orange dot position
-            if let indicatorView = tabBar.subviews.last,
-               let items = tabBar.items,
-               let index = items.firstIndex(of: item),
-               let tabBarButtons = tabBar.subviews.filter({ $0.isKind(of: NSClassFromString("UITabBarButton")!) }) as? [UIView] {
+    // Action when the day is changed from the segmented control
+    @IBAction func dayChanged(_ sender: UISegmentedControl) {
+        reloadActivitiesForSelectedDay()  // Reload activities for the selected day
+        tableView.reloadData()  // Reload table view data to reflect the new activities
+    }
 
-                let selectedButton = tabBarButtons[index]
+    // Function to reload the activities for the selected day
+    func reloadActivitiesForSelectedDay() {
+        let selectedDay = tripTypeSegmentedControl.selectedSegmentIndex + 1
+        activitiesForDisplay.removeAll()
 
-                UIView.animate(withDuration: 0.3) {
-                    indicatorView.center.x = selectedButton.center.x
+        if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
+            if let activitiesForSelectedDay = itinerary.activities[selectedDay] {
+                activitiesForDisplay = activitiesForSelectedDay
+                tableView.reloadData()
+            }
+        }
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "editsegue" {
+            if let destinationVC = segue.destination as? viewitineraryViewController {
+                if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
+                    destinationVC.currtag = itinerary.tag
                 }
             }
         }
     }
+}
+
+
+
+
+
