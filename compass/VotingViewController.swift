@@ -18,6 +18,19 @@ class VotingViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let backgroundImageView = UIImageView(frame: self.view.bounds)
+        backgroundImageView.image = UIImage(named: "background")
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.clipsToBounds = true
+        self.view.addSubview(backgroundImageView)
+        self.view.sendSubviewToBack(backgroundImageView)
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backgroundImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            backgroundImageView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
         if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
             votingactivities = itinerary.activitiesforvoting
         }

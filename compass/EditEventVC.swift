@@ -11,22 +11,39 @@ import UIKit
 // need a bool if new or not
 var allActivities: [Int: [Activity]] = [:]
 
-class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
     var flightInfo: String = ""
     var stayInfo: String = ""
     var eventTitle: String = ""
     var numdays: Int = 0
     var activitiesForDisplay: [Activity] = []
-    var currtag: Int = 1
+    var currtag = 0
     let textCellIdentifier = "TextCell"
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        let backgroundImageView = UIImageView(frame: self.view.bounds)
+        backgroundImageView.image = UIImage(named: "background")
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.clipsToBounds = true
+        self.view.addSubview(backgroundImageView)
+        self.view.sendSubviewToBack(backgroundImageView)
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backgroundImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            backgroundImageView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
+        
+        flightTextField.delegate = self
+        let tapflightGesture = UITapGestureRecognizer(target: self, action: #selector(didTapFlightTextField))
+        flightTextField.addGestureRecognizer(tapflightGesture)
+        let tapstayGesture = UITapGestureRecognizer(target: self, action: #selector(didTapStayTextField))
+        stayTextField.addGestureRecognizer(tapstayGesture)
         tableView.delegate = self
         tableView.dataSource = self
-        // Enable dynamic row sizing
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 200
         populateinfo()
@@ -34,6 +51,7 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
     }
     
     func populateinfo() {
+        print(currtag)
         if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
             titleTextField.text = itinerary.name
             stayTextField.text = itinerary.stays
@@ -109,6 +127,50 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
     @IBOutlet weak var stayTextField: UITextField!
     
     @IBOutlet weak var flightTextField: UITextField!
+    
+    
+    // Function to show the alert with text input prompt
+    func showFlightTextInputPopup() {
+        let alert = UIAlertController(title: "Enter flight confirmation number", message: "", preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = "ex: KPS43"
+            textField.textColor = .black
+        }
+        let submitAction = UIAlertAction(title: "Submit", style: .default) { (_) in
+            if let userInput = alert.textFields?.first?.text {
+                // You can use the user input here, for example:
+                self.flightTextField.text = userInput
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(submitAction)
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    @objc func didTapFlightTextField() {
+        showFlightTextInputPopup()
+    }
+    
+    func showStayTextInputPopup() {
+        let alert = UIAlertController(title: "Enter booking confirmation number", message: "", preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = "ex: KPS43"
+            textField.textColor = .black
+        }
+        let submitAction = UIAlertAction(title: "Submit", style: .default) { (_) in
+            if let userInput = alert.textFields?.first?.text {
+                // You can use the user input here, for example:
+                self.stayTextField.text = userInput
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(submitAction)
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    @objc func didTapStayTextField() {
+        showStayTextInputPopup()
+    }
     
 
     @IBAction func addday(_ sender: Any) {
@@ -192,12 +254,13 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
         present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func saveButton(_ sender: Any) {
-        flightInfo = flightTextField.text ?? ""
-        stayInfo = stayTextField.text ?? ""
-        eventTitle = titleTextField.text ?? ""
-        
-    }
+//    @IBAction func saveButton(_ sender: Any) {
+//        flightInfo = flightTextField.text ?? ""
+//        stayInfo = stayTextField.text ?? ""
+//        eventTitle = titleTextField.text ?? ""
+//        performSegue(withIdentifier: "viewpagesegue", sender: self)
+//
+//    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "viewpagesegue" {

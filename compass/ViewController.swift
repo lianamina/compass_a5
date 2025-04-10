@@ -31,8 +31,22 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     @IBOutlet weak var tableView: UITableView!
     var tagtosend = 0
+    var currnumdays = 0
     override func viewDidLoad() {
         super.viewDidLoad()
+        let backgroundImageView = UIImageView(frame: self.view.bounds)
+        backgroundImageView.image = UIImage(named: "background")
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.clipsToBounds = true
+        self.view.addSubview(backgroundImageView)
+        self.view.sendSubviewToBack(backgroundImageView)
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backgroundImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            backgroundImageView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
         
         // hello
         let activity1 = Activity(title: "Louvre", currentTime: 86400, picture: UIImage(named: "louvre")!, yesVotes: 6, noVotes: 4, didvote: true)
@@ -42,7 +56,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             name: "Hawaii Family Reunion",
             flights: "UA123",
             stays: "Hotel Les Halles",
-            numberOfDays: 3,
+            numberOfDays: 5,
             startdate: "5/15/25",
             enddate: "5/20/25",
             imagename: "hawaii",
@@ -63,7 +77,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             activitiesforday: [1: [activity1, activity2]],
             activitiesforvoting: [activity1, activity2],
             tag: 2,
-            numdays: 1
+            numdays: 3
         )
         
         let trip3 = Info(
@@ -77,7 +91,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             activitiesforday: [1: [activity1, activity2]],
             activitiesforvoting: [activity1, activity2],
             tag: 3,
-            numdays: 1
+            numdays: 3
         )
         let trip4 = Info(
             name: "Italian Summer",
@@ -90,7 +104,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             activitiesforday: [1: [activity1, activity2]],
             activitiesforvoting: [activity1, activity2],
             tag: 4,
-            numdays: 1
+            numdays: 3
         )
 
         DataManager.shared.allItineraries.append(trip1)
@@ -202,13 +216,15 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             let itinerary = DataManager.shared.allItineraries[indexPath.row]
             cell.configure(with: itinerary)
             tagtosend = DataManager.shared.allItineraries[indexPath.row].tag
-
+            print(tagtosend)
             return cell
         }
     
     //come back to this
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedItinerary = DataManager.shared.allItineraries[indexPath.row]
+        tagtosend = selectedItinerary.tag
+        currnumdays = selectedItinerary.numberOfDays
         performSegue(withIdentifier: "viewpagesegue", sender: self)
     }
     
@@ -216,6 +232,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         if segue.identifier == "viewpagesegue" {
             if let destinationVC = segue.destination as? viewitineraryViewController {
                 destinationVC.currtag = tagtosend
+                destinationVC.numdays = currnumdays
+                print(tagtosend)
             }
         }
     }
