@@ -34,6 +34,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var currnumdays = 0
     override func viewDidLoad() {
         super.viewDidLoad()
+        tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+        
         let backgroundImageView = UIImageView(frame: self.view.bounds)
         backgroundImageView.image = UIImage(named: "background")
         backgroundImageView.contentMode = .scaleAspectFill

@@ -48,6 +48,8 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
 
         
         let backgroundImageView = UIImageView(frame: self.view.bounds)
