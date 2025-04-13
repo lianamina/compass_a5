@@ -49,7 +49,6 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
         let backgroundImageView = UIImageView(frame: self.view.bounds)
         backgroundImageView.image = UIImage(named: "background")
         backgroundImageView.contentMode = .scaleAspectFill
@@ -106,8 +105,10 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
             customTabs.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             customTabs.heightAnchor.constraint(equalToConstant: 60)
         ])
-
-        reloadActivitiesForSelectedDay(selectedIndex: 0)
+        DispatchQueue.main.async {
+            customTabs.selectedIndex = 0
+            self.reloadActivitiesForSelectedDay(selectedIndex: 0)
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -118,12 +119,16 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
         
         let cell = tableView.dequeueReusableCell(withIdentifier: textCellIdentifier, for: indexPath) as! TimelineActivityCell
         let activity = activitiesForDisplay[indexPath.row]
+
+        
         yesVotes = activity.yesVotes
         noVotes = activity.noVotes
         let isFirst = indexPath.row == 0
         let isLast = indexPath.row == activitiesForDisplay.count - 1
         let state: TimelineActivityCell.TimelineState = isFirst ? .highlighted : .normal
         cell.configureTimelinePosition(isFirst: isFirst, isLast: isLast, state: state)
+        cell.selectionStyle = .none
+
         
         let titleLabel = UILabel()
         titleLabel.text = activity.title
@@ -171,7 +176,30 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
         votebutton.addTarget(self, action: #selector(voteButtonPressed(_:)), for: .touchUpInside)
         votebutton.isHidden = activity.didvote
         
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
+            titleLabel.widthAnchor.constraint(equalToConstant: 500),
+            titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 20),
+            notesLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+            notesLabel.widthAnchor.constraint(equalToConstant: 200),
+            notesLabel.heightAnchor.constraint(equalToConstant: 20),
+            notesLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
+            imageView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
+            imageView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
+            imageView.widthAnchor.constraint(equalToConstant: 120),
+            imageView.heightAnchor.constraint(equalToConstant: 120),
+            imageView.heightAnchor.constraint(equalToConstant: 120),
+            imageView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30),
+            
+            votebutton.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
+            votebutton.topAnchor.constraint(equalTo: notesLabel.bottomAnchor, constant: 12),
+            votebutton.widthAnchor.constraint(equalToConstant: 80),
+            votebutton.heightAnchor.constraint(equalToConstant: 30),
+            votebutton.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30),
+            ])
+        
         let resultsView = UIView()
+        resultsView.tag = 999
         resultsView.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(resultsView)
 
@@ -192,8 +220,7 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
         avatarStack.spacing = -10
         avatarStack.translatesAutoresizingMaskIntoConstraints = false
         resultsView.addSubview(avatarStack)
-        resultsView.isHidden = !activity.didvote
-        
+
         let imageNames = ["person1", "person2", "person3"]
         for name in imageNames {
             let avatar = UIImageView(image: UIImage(named: name))
@@ -204,34 +231,16 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
             avatar.heightAnchor.constraint(equalToConstant: 24).isActive = true
             avatarStack.addArrangedSubview(avatar)
         }
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(showVotingResults))
-        resultsView.addGestureRecognizer(tap)
-        resultsView.isUserInteractionEnabled = true
-        
+
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
-            titleLabel.widthAnchor.constraint(equalToConstant: 500),
-            titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 20),
-            notesLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
-            notesLabel.widthAnchor.constraint(equalToConstant: 200),
-            notesLabel.heightAnchor.constraint(equalToConstant: 20),
-            notesLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
-            imageView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
-            imageView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
-            imageView.widthAnchor.constraint(equalToConstant: 120),
-            imageView.heightAnchor.constraint(equalToConstant: 120),
-            imageView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30),
-            
-            votebutton.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
-            votebutton.topAnchor.constraint(equalTo: notesLabel.bottomAnchor, constant: 12),
-            votebutton.widthAnchor.constraint(equalToConstant: 80),
-            votebutton.heightAnchor.constraint(equalToConstant: 30),
-            votebutton.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30),
-            
             resultsView.topAnchor.constraint(equalTo: notesLabel.bottomAnchor, constant: 12),
             resultsView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
-            resultsView.trailingAnchor.constraint(lessThanOrEqualTo: cell.contentView.trailingAnchor, constant: -20),
+            resultsView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -20),
+
+            resultsView.heightAnchor.constraint(equalToConstant: 40), // force a height
+            resultsView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10),
+//            resultsView.widthAnchor.constraint(greaterThanOrEqualToConstant: 200)
+
 
             checkIcon.leadingAnchor.constraint(equalTo: resultsView.leadingAnchor),
             checkIcon.centerYAnchor.constraint(equalTo: viewLabel.centerYAnchor),
@@ -245,7 +254,17 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
             avatarStack.topAnchor.constraint(equalTo: viewLabel.bottomAnchor, constant: 4),
             avatarStack.bottomAnchor.constraint(equalTo: resultsView.bottomAnchor)
         ])
-        
+
+        // Important: remove old gestures to avoid stacking
+        resultsView.gestureRecognizers?.forEach { resultsView.removeGestureRecognizer($0) }
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showVotingResults))
+        resultsView.addGestureRecognizer(tap)
+        resultsView.isUserInteractionEnabled = true
+        resultsView.isHidden = !activity.didvote
+        cell.contentView.bringSubviewToFront(resultsView)
+        cell.setNeedsLayout()
+        cell.layoutIfNeeded()
+
         return cell
     }
     
@@ -346,14 +365,14 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
         container.addSubview(noLabel)
         
         let yesnumlabel = UILabel()
-        yesnumlabel.text = String(yesVotes) ?? ""
+        yesnumlabel.text = String(yesVotes)
         yesnumlabel.font = UIFont.boldSystemFont(ofSize: 10)
         yesnumlabel.translatesAutoresizingMaskIntoConstraints = false
         yesnumlabel.tag = 106
         container.addSubview(yesnumlabel)
         
         let nonumlabel = UILabel()
-        nonumlabel.text = String(noVotes) ?? ""
+        nonumlabel.text = String(noVotes)
         nonumlabel.font = UIFont.boldSystemFont(ofSize: 10)
         nonumlabel.translatesAutoresizingMaskIntoConstraints = false
         nonumlabel.tag = 107
@@ -367,7 +386,7 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
         container.addSubview(naLabel)
         
         let nanumlabel = UILabel()
-        nanumlabel.text = String(numpeople - (noVotes + yesVotes)) ?? ""
+        nanumlabel.text = String(numpeople - (noVotes + yesVotes))
         nanumlabel.font = UIFont.boldSystemFont(ofSize: 10)
         nanumlabel.translatesAutoresizingMaskIntoConstraints = false
         nanumlabel.tag = 109
@@ -472,6 +491,7 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
         dismiss(animated: true)
     }
     
+
     @objc func voteButtonPressed(_ sender: UIButton) {
         if let votingVC = storyboard?.instantiateViewController(withIdentifier: "VotingViewControllerID") as? VotingViewController {
             if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
@@ -481,6 +501,7 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
             self.present(votingVC, animated: true)
         }
     }
+    
 
     func reloadActivitiesForSelectedDay(selectedIndex: Int) {
         let selectedDay = selectedIndex + 1
