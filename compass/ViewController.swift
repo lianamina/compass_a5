@@ -34,6 +34,8 @@ class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewD
     var currnumdays = 0
     override func viewDidLoad() {
         super.viewDidLoad()
+        tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+        
         let backgroundImageView = UIImageView(frame: self.view.bounds)
         backgroundImageView.image = UIImage(named: "background")
         backgroundImageView.contentMode = .scaleAspectFill
@@ -49,8 +51,8 @@ class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewD
         ])
         
         // hello
-        let activity1 = Activity(title: "Louvre", currentTime: 86400, picture: UIImage(named: "louvre")!, yesVotes: 6, noVotes: 4, didvote: true)
-        let activity2 = Activity(title: "Eiffel Tower", currentTime: 86400, picture: UIImage(named: "eiffel")!, yesVotes: 7, noVotes: 3, didvote: false)
+        let activity1 = Activity(title: "Louvre", currentTime: 86400, picture: UIImage(named: "louvre")!, yesVotes: 6, noVotes: 4, didvote: true, notes: "this is my note")
+        let activity2 = Activity(title: "Eiffel Tower", currentTime: 86400, picture: UIImage(named: "eiffel")!, yesVotes: 7, noVotes: 3, didvote: false, notes: "this is mt note pt 2 and what is it is really lond ang the contraints cannot hold it and there is a lot of text becasue denise really wants to go to the louvre")
 
         let trip1 = Info(
             name: "Hawaii Family Reunion",
@@ -63,7 +65,8 @@ class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewD
             activitiesforday: [1: [activity1], 2: [activity2]],
             activitiesforvoting: [activity1, activity2],
             tag: 1,
-            numdays: 5
+            numdays: 5,
+            totalpeople: 12
             
         )
         let trip2 = Info(
@@ -77,7 +80,8 @@ class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewD
             activitiesforday: [1: [activity1, activity2]],
             activitiesforvoting: [activity1, activity2],
             tag: 2,
-            numdays: 3
+            numdays: 3,
+            totalpeople: 20
         )
         
         let trip3 = Info(
@@ -91,7 +95,8 @@ class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewD
             activitiesforday: [1: [activity1, activity2]],
             activitiesforvoting: [activity1, activity2],
             tag: 3,
-            numdays: 3
+            numdays: 3,
+            totalpeople: 12
         )
         let trip4 = Info(
             name: "Italian Summer",
@@ -104,7 +109,8 @@ class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewD
             activitiesforday: [1: [activity1, activity2]],
             activitiesforvoting: [activity1, activity2],
             tag: 4,
-            numdays: 3
+            numdays: 3,
+            totalpeople: 12
         )
 
         DataManager.shared.allItineraries.append(trip1)
