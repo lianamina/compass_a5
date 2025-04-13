@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="S5r-Si-DFc">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -33,7 +33,58 @@
             </objects>
             <point key="canvasLocation" x="-1870.9923664122136" y="84.507042253521135"/>
         </scene>
-        <!--View Controller-->
+        <!--Tab Bar Controller-->
+        <scene sceneID="POD-AQ-RZU">
+            <objects>
+                <tabBarController id="S5r-Si-DFc" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="MTW-z3-DNo">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="Zpp-4K-Re5"/>
+                        <segue destination="5Nc-1B-7h1" kind="relationship" relationship="viewControllers" id="gUM-Lm-hA6"/>
+                        <segue destination="Rs6-Gz-S8S" kind="relationship" relationship="viewControllers" id="Avb-lp-VCz"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ACZ-Ah-uRb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2769" y="555"/>
+        </scene>
+        <!--Discover-->
+        <scene sceneID="eo8-rR-CdV">
+            <objects>
+                <viewController id="5Nc-1B-7h1" customClass="DiscoverViewController" customModule="compass" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="X7l-Qf-6JY">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="gCK-KZ-CkK"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Discover" image="magnifyingglass" catalog="system" id="Afk-9a-p6f"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RqI-N6-8FC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1161" y="779"/>
+        </scene>
+        <!--Profile-->
+        <scene sceneID="4DX-Pb-cji">
+            <objects>
+                <viewController id="Rs6-Gz-S8S" customClass="ProfileViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xJm-uw-0YN">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="EbX-xi-C92"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle.fill" catalog="system" id="kht-zL-mad"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7O5-Ak-02g" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-121" y="830"/>
+        </scene>
+        <!--Home-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="compass" customModuleProvider="target" sceneMemberID="viewController">
@@ -149,19 +200,11 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IFX-xF-6wH">
-                                <rect key="frame" x="36" y="765" width="75" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
-                                <connections>
-                                    <segue destination="TEg-Qn-fF5" kind="presentation" id="wg3-fT-FCO"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Home" image="house" catalog="system" id="R92-o5-iyC"/>
                     <connections>
                         <outlet property="collectionView" destination="3Ki-nQ-W9C" id="pLI-s8-cjW"/>
                         <outlet property="tableView" destination="lL4-se-3l7" id="BIP-Ib-AnL"/>
@@ -405,10 +448,12 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="9we-Ju-m9O"/>
-        <segue reference="ERg-mc-rAI"/>
+        <segue reference="jsD-vY-oMl"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="house" catalog="system" width="128" height="104"/>
+        <image name="magnifyingglass" catalog="system" width="128" height="117"/>
+        <image name="person.crop.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
