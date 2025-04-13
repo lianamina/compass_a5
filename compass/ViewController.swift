@@ -25,9 +25,9 @@ struct Itinerary: Hashable {
     }
 }
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, ItineraryCreationDelegate, UITableViewDataSource, UITableViewDelegate {
+class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewDataSource, UITableViewDelegate {
     
-    @IBOutlet weak var collectionView: UICollectionView!
+//    @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet weak var tableView: UITableView!
     var tagtosend = 0
@@ -114,8 +114,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
         
         // Do any additional setup after loading the view.
-        collectionView.dataSource = self
-        collectionView.delegate = self
+//        collectionView.dataSource = self
+//        collectionView.delegate = self
    
         tableView.dataSource = self
         tableView.delegate = self
@@ -134,25 +134,25 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
         
-        // Configure horizontal layout
-            let layout = UICollectionViewFlowLayout()
-            layout.scrollDirection = .horizontal
-        
-        let screenWidth = UIScreen.main.bounds.width
-        let itemWidth = screenWidth/4 //4 items per row
-            layout.itemSize = CGSize(width: itemWidth, height: itemWidth+40) // Adjust size as needed
-            layout.minimumLineSpacing = 16
-            
-            collectionView.collectionViewLayout = layout
-        
-        self.collectionView.reloadData()
+        // Configure horizontal layout COLLECTION VIEW
+//            let layout = UICollectionViewFlowLayout()
+//            layout.scrollDirection = .horizontal
+//        
+//        let screenWidth = UIScreen.main.bounds.width
+//        let itemWidth = screenWidth/4 //4 items per row
+//            layout.itemSize = CGSize(width: itemWidth, height: itemWidth+40) // Adjust size as needed
+//            layout.minimumLineSpacing = 16
+//            
+//            collectionView.collectionViewLayout = layout
+//        
+//        self.collectionView.reloadData()
         tableView.reloadData()
     }
     
     func didCreateNewItinerary(_ itinerary: Itinerary) {
         featuredItineraries.append(itinerary)
         //potentially append to allItineraries too
-        collectionView.reloadData()
+//        collectionView.reloadData()
     }
     
 //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -171,35 +171,28 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         Itinerary(title: "Week in Tokyo", startDate: "", endDate: "", imageName: "glass")
     ]
     
-
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.row == 0 { // Assuming first item is the "+" button
-            performSegue(withIdentifier: "itinCellToEditEventVC", sender: self)
-        }
-//        } else {
-//            // Handle regular itinerary selection
-//            let selectedItinerary = featuredItineraries[indexPath.row - 1] // Offset by 1 due to "+" button
-//            // Navigate to itinerary details or other action
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        if indexPath.row == 0 { // Assuming first item is the "+" button
+//            performSegue(withIdentifier: "itinCellToEditEventVC", sender: self)
 //        }
-    }
+//    }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            return featuredItineraries.count
-        }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "itineraryCell", for: indexPath) as! itineraryCell
-        
-        if let itinerary = featuredItineraries[indexPath.row] {
-            // Configure cell for an itinerary
-            cell.configure(withTitle: itinerary.title, imageName: itinerary.imageName)
-        } else {
-            cell.configureAsCreateButton()
-        }
-        
-        return cell
-    }
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//            return featuredItineraries.count
+//        }
+//
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "itineraryCell", for: indexPath) as! itineraryCell
+//        
+//        if let itinerary = featuredItineraries[indexPath.row] {
+//            // Configure cell for an itinerary
+//            cell.configure(withTitle: itinerary.title, imageName: itinerary.imageName)
+//        } else {
+//            cell.configureAsCreateButton()
+//        }
+//        
+//        return cell
+//    }
     
     
     // TABLE VIEW FUNCTIONS START BELOW
