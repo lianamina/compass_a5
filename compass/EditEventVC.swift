@@ -17,9 +17,10 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
     var stayInfo: String = ""
     var eventTitle: String = ""
     var numdays: Int = 0
+    var activitytime = "12 PM"
     var activitiesForDisplay: [Activity] = []
+    @IBOutlet weak var addactivitybutton: UIButton!
     
-
     var currtag = 0
     let textCellIdentifier = "TextCell"
 
@@ -48,6 +49,11 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
         tableView.dataSource = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 200
+        
+        // button constriants
+        addactivitybutton.backgroundColor = UIColor(red: 0.99, green: 0.29, blue: 0.03, alpha: 1.00)
+        addactivitybutton.layer.cornerRadius = 8
+        addactivitybutton.titleLabel?.textColor = UIColor.white
         populateinfo()
 
     }
@@ -58,6 +64,9 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
             titleTextField.text = itinerary.name
             stayTextField.text = itinerary.stays
             flightTextField.text = itinerary.flights
+            flightInfo = itinerary.flights
+            stayInfo = itinerary.stays
+            eventTitle = itinerary.name
             numdays = itinerary.numdays
             allActivities = itinerary.activitiesforday
         }
@@ -84,6 +93,9 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: textCellIdentifier, for: indexPath)
+        for subview in cell.contentView.subviews {
+            subview.removeFromSuperview()
+        }
 
         let activity = activitiesForDisplay[indexPath.row]
             
@@ -95,6 +107,14 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
         titleLabel.backgroundColor = UIColor.white
         cell.contentView.addSubview(titleLabel)
         
+        let time = UILabel()
+        time.text = formattedTime(from: activity.time)
+        time.font = UIFont.boldSystemFont(ofSize: 10)
+        time.textColor = UIColor.systemGray2
+        time.translatesAutoresizingMaskIntoConstraints = false
+        time.backgroundColor = UIColor.white
+        cell.contentView.addSubview(time)
+        
         // Image View
         let imageView = UIImageView()
         imageView.image = activity.picture  // Replace with your image
@@ -104,6 +124,14 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
         imageView.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(imageView)
             
+        let notes = UILabel()
+        notes.text = activity.notes
+        notes.font = UIFont.boldSystemFont(ofSize: 14)
+        notes.textColor = UIColor.systemGray2
+        notes.translatesAutoresizingMaskIntoConstraints = false
+        notes.backgroundColor = UIColor.white
+        cell.contentView.addSubview(notes)
+        
         let deleteButton = UIButton(type: .system)
         deleteButton.setTitle("Delete Activity", for: .normal)
         deleteButton.setTitleColor(.red, for: .normal)
@@ -123,19 +151,28 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
         cell.contentView.addSubview(deleteButton)
             
             NSLayoutConstraint.activate([
-                // Title label constraints
+                time.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
+                time.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 20),
+                
                 titleLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
                 titleLabel.widthAnchor.constraint(equalToConstant: 500),
-                titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 20),
-                titleLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30),
-                // Image view constraints (right side)
+                titleLabel.topAnchor.constraint(equalTo: time.bottomAnchor, constant: 10),
+  
+                
                 imageView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
+                
                 imageView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
                 imageView.widthAnchor.constraint(equalToConstant: 120),
                 imageView.heightAnchor.constraint(equalToConstant: 120),
                 imageView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30),
-                    deleteButton.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
-                    deleteButton.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10),
+                
+                notes.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+                notes.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
+                notes.bottomAnchor.constraint(equalTo: deleteButton.topAnchor, constant: 10),
+                notes.widthAnchor.constraint(equalToConstant: 200),
+                
+                deleteButton.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
+                deleteButton.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10),
                 
             ])
         
@@ -149,6 +186,16 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
     
     @IBOutlet weak var flightTextField: UITextField!
     
+    func formattedTime(from interval: TimeInterval) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = .current
+
+        let midnight = Calendar.current.startOfDay(for: Date())
+        let time = midnight.addingTimeInterval(interval)
+        return formatter.string(from: time)
+    }
     
     // Function to show the alert with text input prompt
     func showFlightTextInputPopup() {
@@ -221,6 +268,23 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
         }
     }
     
+    func timeIntervalFromString(_ timeString: String) -> TimeInterval? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h a" // handles "9 AM", "5 PM", etc.
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = .current
+
+        guard let parsedTime = formatter.date(from: timeString.uppercased()) else {
+            return nil
+        }
+
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        return parsedTime.timeIntervalSince(startOfDay)
+    }
+    
+
+
+    
     @IBAction func addactivity(_ sender: Any) {
         let alert = UIAlertController(title: "New Activity", message: "Enter the activity details", preferredStyle: .alert)
 
@@ -237,31 +301,35 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
             textField.placeholder = "Image name"
         }
 
+        alert.addTextField { textField in
+            textField.placeholder = "Time (e.g. 9 AM)"
+        }
+        
         // Add actions
         let addAction = UIAlertAction(title: "Add", style: .default) { _ in
             let title = alert.textFields?[0].text ?? "Untitled"
-            let info = alert.textFields?[1].text ?? ""
+            let notes = alert.textFields?[1].text ?? ""
             let imageName = alert.textFields?[2].text ?? "defaultImage"
-
             let image = UIImage(named: imageName) ?? UIImage(systemName: "photo")!
+            let timeString = alert.textFields?[3].text ?? "12 PM"  // Default to noon
+
+            let timeInterval = self.timeIntervalFromString(timeString) ?? 43200  // 43200s = 12 PM
 
             // Create new activity
-            let newActivity = Activity(title: title, currentTime: Date().timeIntervalSince1970, picture: image)
+            let newActivity = Activity(title: title, currentTime: Date().timeIntervalSince1970, picture: image, didvote: false, notes: notes, time: self.timeIntervalFromString("11 AM") ?? 0)
 
             // Get the selected day from the segmented control
             let selectedDay = self.tripTypeSegmentedControl.selectedSegmentIndex + 1
 
-//            self.activitiesaddedforday.append(newActivity)
-//            
-//            if self.activitiesaddedforvoting[selectedDay] != nil {
-//                self.activitiesaddedforvoting[selectedDay]?.append(newActivity)
+//            if allActivities[selectedDay] != nil {
+//                allActivities[selectedDay]?.append(newActivity)
 //            } else {
-//                self.activitiesaddedforvoting[selectedDay] = [newActivity]
+//                allActivities[selectedDay] = [newActivity]
 //            }
-            
-            // Add activity to the selected day
-            if allActivities[selectedDay] != nil {
-                allActivities[selectedDay]?.append(newActivity)
+            if var dayActivities = allActivities[selectedDay] {
+                dayActivities.append(newActivity)
+                dayActivities.sort { $0.currentTime < $1.currentTime }
+                allActivities[selectedDay] = dayActivities
             } else {
                 allActivities[selectedDay] = [newActivity]
             }
@@ -272,7 +340,6 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
                 DataManager.shared.allItineraries[index].activitiesforvoting.append(newActivity)
             }
 
-            // Reload the table view if it's the selected day
             self.reloadActivitiesForSelectedDay()
         }
 
@@ -301,9 +368,6 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
                     itinerary.numdays = numdays
                     itinerary.name = eventTitle
                     destinationVC.currtag = itinerary.tag
-                    
-                    
-                    destinationVC.viewDidLoad()
                 }
             }
         }

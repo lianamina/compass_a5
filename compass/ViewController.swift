@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Foundation
 
 protocol ItineraryCreationDelegate: AnyObject {
     func didCreateNewItinerary(_ itinerary: Itinerary)
@@ -51,8 +52,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         ])
         
         // hello
-        let activity1 = Activity(title: "Louvre", currentTime: 86400, picture: UIImage(named: "louvre")!, yesVotes: 6, noVotes: 4, didvote: true, notes: "this is my note")
-        let activity2 = Activity(title: "Eiffel Tower", currentTime: 86400, picture: UIImage(named: "eiffel")!, yesVotes: 7, noVotes: 3, didvote: false, notes: "this is mt note pt 2 and what is it is really lond ang the contraints cannot hold it and there is a lot of text becasue denise really wants to go to the louvre")
+        let activity1 = Activity(title: "Louvre", currentTime: 86400, picture: UIImage(named: "louvre")!, yesVotes: 6, noVotes: 4, didvote: true, notes: "this is my note", time: timeIntervalFromString("10 AM") ?? 0)
+        let activity2 = Activity(title: "Eiffel Tower", currentTime: 86400, picture: UIImage(named: "eiffel")!, yesVotes: 7, noVotes: 3, didvote: false, notes: "this is mt note pt 2 and what is it is really lond ang the contraints cannot hold it and there is a lot of text becasue denise really wants to go to the louvre", time: timeIntervalFromString("7 AM") ?? 0)
 
         let trip1 = Info(
             name: "Hawaii Family Reunion",
@@ -168,7 +169,24 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 //            }
 //        }
 //    }
-    
+    func timeIntervalFromString(_ timeString: String) -> TimeInterval? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h a" // handles "9 AM", "5 PM", etc.
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = .current
+
+        guard let parsedTime = formatter.date(from: timeString.uppercased()) else {
+            return nil
+        }
+
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        return parsedTime.timeIntervalSince(startOfDay)
+    }
+
+
+
+
+
     var featuredItineraries = [
         nil, //for create new itinerary button
         Itinerary(title: "Paris Girls' Trip", startDate: "", endDate: "", imageName: "arc"),

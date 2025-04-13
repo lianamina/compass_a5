@@ -86,7 +86,6 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
             numpeople = itinerary.totalpeople
             allActivities = itinerary.activitiesforday
         }
-
         // Generate segment titles and dates
         let titles = (1...numdays).map { "Day \($0)" }
         let dates = generateDateStrings(startingFrom: "Apr 4", numdays: numdays) // Helper method from before
@@ -131,6 +130,14 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
         cell.configureTimelinePosition(isFirst: isFirst, isLast: isLast, state: state)
         cell.selectionStyle = .none
 
+        let time = UILabel()
+        time.text = formattedTime(from: activity.time)
+        time.font = UIFont.boldSystemFont(ofSize: 10)
+        time.textColor = UIColor.systemGray2
+        time.translatesAutoresizingMaskIntoConstraints = false
+        time.backgroundColor = UIColor.white
+        cell.contentView.addSubview(time)
+        
         
         let titleLabel = UILabel()
         titleLabel.text = activity.title
@@ -179,13 +186,18 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
         votebutton.isHidden = activity.didvote
         
         NSLayoutConstraint.activate([
+            time.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
+            time.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 20),
+            
             titleLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
             titleLabel.widthAnchor.constraint(equalToConstant: 500),
-            titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 20),
+            titleLabel.topAnchor.constraint(equalTo: time.bottomAnchor, constant: 10),
+            
             notesLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
             notesLabel.widthAnchor.constraint(equalToConstant: 200),
             notesLabel.heightAnchor.constraint(equalToConstant: 20),
             notesLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
+            
             imageView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
             imageView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
             imageView.widthAnchor.constraint(equalToConstant: 120),
@@ -200,75 +212,75 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
             votebutton.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -30),
             ])
         
-        let resultsView = UIView()
-        resultsView.tag = 999
-        resultsView.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addSubview(resultsView)
+        
+        let resultsView: UIView
+            if let existing = cell.contentView.viewWithTag(999) {
+                resultsView = existing
+                resultsView.isHidden = !activity.didvote
+            } else {
+                resultsView = UIView()
+                resultsView.tag = 999
+                resultsView.translatesAutoresizingMaskIntoConstraints = false
+                cell.contentView.addSubview(resultsView)
 
-        let checkIcon = UIImageView(image: UIImage(systemName: "checkmark.circle"))
-        checkIcon.tintColor = .gray
-        checkIcon.translatesAutoresizingMaskIntoConstraints = false
-        resultsView.addSubview(checkIcon)
+                let checkIcon = UIImageView(image: UIImage(systemName: "checkmark.circle"))
+                checkIcon.tintColor = .gray
+                checkIcon.translatesAutoresizingMaskIntoConstraints = false
+                resultsView.addSubview(checkIcon)
 
-        let viewLabel = UILabel()
-        viewLabel.text = "View Results"
-        viewLabel.font = UIFont.systemFont(ofSize: 14)
-        viewLabel.textColor = .gray
-        viewLabel.translatesAutoresizingMaskIntoConstraints = false
-        resultsView.addSubview(viewLabel)
+                let viewLabel = UILabel()
+                viewLabel.text = "View Results"
+                viewLabel.font = UIFont.systemFont(ofSize: 14)
+                viewLabel.textColor = .gray
+                viewLabel.translatesAutoresizingMaskIntoConstraints = false
+                resultsView.addSubview(viewLabel)
 
-        let avatarStack = UIStackView()
-        avatarStack.axis = .horizontal
-        avatarStack.spacing = -10
-        avatarStack.translatesAutoresizingMaskIntoConstraints = false
-        resultsView.addSubview(avatarStack)
+                let avatarStack = UIStackView()
+                avatarStack.axis = .horizontal
+                avatarStack.spacing = -10
+                avatarStack.translatesAutoresizingMaskIntoConstraints = false
+                resultsView.addSubview(avatarStack)
 
-        let imageNames = ["person1", "person2", "person3"]
-        for name in imageNames {
-            let avatar = UIImageView(image: UIImage(named: name))
-            avatar.layer.cornerRadius = 12
-            avatar.clipsToBounds = true
-            avatar.translatesAutoresizingMaskIntoConstraints = false
-            avatar.widthAnchor.constraint(equalToConstant: 24).isActive = true
-            avatar.heightAnchor.constraint(equalToConstant: 24).isActive = true
-            avatarStack.addArrangedSubview(avatar)
+                let imageNames = ["person1", "person2", "person3"]
+                for name in imageNames {
+                    let avatar = UIImageView(image: UIImage(named: name))
+                    avatar.layer.cornerRadius = 12
+                    avatar.clipsToBounds = true
+                    avatar.translatesAutoresizingMaskIntoConstraints = false
+                    avatar.widthAnchor.constraint(equalToConstant: 24).isActive = true
+                    avatar.heightAnchor.constraint(equalToConstant: 24).isActive = true
+                    avatarStack.addArrangedSubview(avatar)
+                }
+
+                NSLayoutConstraint.activate([
+                    resultsView.topAnchor.constraint(equalTo: notesLabel.bottomAnchor, constant: 12),
+                    resultsView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
+                    resultsView.trailingAnchor.constraint(lessThanOrEqualTo: cell.contentView.trailingAnchor, constant: -20),
+                    resultsView.heightAnchor.constraint(equalToConstant: 40),
+                    resultsView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10),
+
+                    checkIcon.leadingAnchor.constraint(equalTo: resultsView.leadingAnchor),
+                    checkIcon.centerYAnchor.constraint(equalTo: viewLabel.centerYAnchor),
+                    checkIcon.widthAnchor.constraint(equalToConstant: 20),
+                    checkIcon.heightAnchor.constraint(equalToConstant: 20),
+
+                    viewLabel.leadingAnchor.constraint(equalTo: checkIcon.trailingAnchor, constant: 8),
+                    viewLabel.topAnchor.constraint(equalTo: resultsView.topAnchor),
+
+                    avatarStack.leadingAnchor.constraint(equalTo: resultsView.leadingAnchor),
+                    avatarStack.topAnchor.constraint(equalTo: viewLabel.bottomAnchor, constant: 4),
+                    avatarStack.bottomAnchor.constraint(equalTo: resultsView.bottomAnchor)
+                ])
+
+                resultsView.gestureRecognizers?.forEach { resultsView.removeGestureRecognizer($0) }
+                resultsView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showVotingResults)))
+                resultsView.isUserInteractionEnabled = true
+                resultsView.isHidden = !activity.didvote
+                cell.contentView.bringSubviewToFront(resultsView)
+            }
+
+            return cell
         }
-
-        NSLayoutConstraint.activate([
-            resultsView.topAnchor.constraint(equalTo: notesLabel.bottomAnchor, constant: 12),
-            resultsView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 50),
-            resultsView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -20),
-
-            resultsView.heightAnchor.constraint(equalToConstant: 40), // force a height
-            resultsView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10),
-//            resultsView.widthAnchor.constraint(greaterThanOrEqualToConstant: 200)
-
-
-            checkIcon.leadingAnchor.constraint(equalTo: resultsView.leadingAnchor),
-            checkIcon.centerYAnchor.constraint(equalTo: viewLabel.centerYAnchor),
-            checkIcon.widthAnchor.constraint(equalToConstant: 20),
-            checkIcon.heightAnchor.constraint(equalToConstant: 20),
-
-            viewLabel.leadingAnchor.constraint(equalTo: checkIcon.trailingAnchor, constant: 8),
-            viewLabel.topAnchor.constraint(equalTo: resultsView.topAnchor),
-
-            avatarStack.leadingAnchor.constraint(equalTo: resultsView.leadingAnchor),
-            avatarStack.topAnchor.constraint(equalTo: viewLabel.bottomAnchor, constant: 4),
-            avatarStack.bottomAnchor.constraint(equalTo: resultsView.bottomAnchor)
-        ])
-
-        // Important: remove old gestures to avoid stacking
-        resultsView.gestureRecognizers?.forEach { resultsView.removeGestureRecognizer($0) }
-        let tap = UITapGestureRecognizer(target: self, action: #selector(showVotingResults))
-        resultsView.addGestureRecognizer(tap)
-        resultsView.isUserInteractionEnabled = true
-        resultsView.isHidden = !activity.didvote
-        cell.contentView.bringSubviewToFront(resultsView)
-        cell.setNeedsLayout()
-        cell.layoutIfNeeded()
-
-        return cell
-    }
     
     @objc func showFullNote(_ sender: NoteTapGestureRecognizer) {
         let popup = TextPopupViewController()
@@ -494,6 +506,18 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
 
+    func formattedTime(from interval: TimeInterval) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = .current
+
+        let midnight = Calendar.current.startOfDay(for: Date())
+        let time = midnight.addingTimeInterval(interval)
+        return formatter.string(from: time)
+    }
+
+    
     @objc func voteButtonPressed(_ sender: UIButton) {
         if let votingVC = storyboard?.instantiateViewController(withIdentifier: "VotingViewControllerID") as? VotingViewController {
             if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
@@ -511,7 +535,10 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
 
         if let itinerary = DataManager.shared.allItineraries.first(where: { $0.tag == currtag }) {
             if let activitiesForSelectedDay = itinerary.activitiesforday[selectedDay], !activitiesForSelectedDay.isEmpty {
-                activitiesForDisplay = activitiesForSelectedDay
+                if let activitiesForSelectedDay = itinerary.activitiesforday[selectedDay] {
+                    activitiesForDisplay = activitiesForSelectedDay.sorted { $0.time < $1.time }
+
+                }
                 noActivitiesLabel.isHidden = true
             } else {
                 activitiesForDisplay = []
@@ -522,6 +549,8 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
         tableView.reloadData()
     }
 
+
+        
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "editsegue" {
             if let destinationVC = segue.destination as? EditEventVC {
