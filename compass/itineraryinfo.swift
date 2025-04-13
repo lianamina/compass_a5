@@ -48,8 +48,9 @@ class Activity {
     var noVotes: Int
     var didvote: Bool
     var notes: String
+    var time: TimeInterval
     
-    init(title: String, currentTime: Double, picture: UIImage, yesVotes: Int = 0, noVotes: Int = 0, didvote: Bool = false, notes: String = "") {
+    init(title: String, currentTime: Double, picture: UIImage, yesVotes: Int = 0, noVotes: Int = 0, didvote: Bool = false, notes: String, time: TimeInterval) {
         self.title = title
         self.currentTime = currentTime
         self.picture = picture
@@ -57,6 +58,7 @@ class Activity {
         self.noVotes = noVotes
         self.didvote = didvote
         self.notes = notes
+        self.time = time
     }
 }
 
