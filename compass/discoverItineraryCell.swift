@@ -12,9 +12,9 @@ class discoverItineraryCell: UICollectionViewCell {
     @IBOutlet weak var bgImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     
-    func configure(with itinerary: DiscoverItinerary) {
+    func configure(with itinerary: Info) {
         bgImageView.image = UIImage(named: itinerary.imageName)
-        titleLabel.text = itinerary.title
+        titleLabel.text = itinerary.name
         
         // Add some styling
         bgImageView.contentMode = .scaleAspectFill

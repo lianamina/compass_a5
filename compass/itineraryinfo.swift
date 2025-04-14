@@ -68,7 +68,9 @@ class DataManager {
     private init() { }
     
     var allItineraries: [Info] = []
+    var discoverItineraries: [Info] = []
     var activities: [Activity] = []
+    let emptyActivities: [Int: [Activity]] = [:]
 }
 
 

@@ -68,7 +68,6 @@ class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewD
             tag: 1,
             numdays: 5,
             totalpeople: 12
-            
         )
         let trip2 = Info(
             name: "Bachelorette in Vegas",

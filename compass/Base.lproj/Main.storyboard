@@ -476,6 +476,7 @@
                                         <connections>
                                             <outlet property="bgImageView" destination="FJP-GR-uMK" id="Tsc-dz-nHB"/>
                                             <outlet property="titleLabel" destination="yvI-3w-B6V" id="8fA-Bt-OvC"/>
+                                            <segue destination="cUU-xg-cdR" kind="show" identifier="discoverCellToViewSegue" id="UFF-l4-LRf"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
