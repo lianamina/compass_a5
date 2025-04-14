@@ -15,6 +15,7 @@ struct DiscoverItinerary {
 
 class DiscoverVC: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
+    @IBOutlet weak var clickbutton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     var tagtosend = 0
     
@@ -99,7 +100,7 @@ class DiscoverVC: UIViewController, UICollectionViewDataSource, UICollectionView
     override func viewDidLoad() {
         super.viewDidLoad()
         //need to fill itinerary or append to array of all itineraries
-        
+        view.bringSubviewToFront(clickbutton)
         setUpItineraries()
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -157,12 +158,23 @@ class DiscoverVC: UIViewController, UICollectionViewDataSource, UICollectionView
 //            performSegue(withIdentifier: "discoverCellToViewSegue", sender: self)
         }
     
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        print("Prepare for segue called with identifier: \(segue.identifier ?? "nil")") // DEBUGGING, DELETE LATER
+//        if segue.identifier == "discoverCellToViewSegue" {
+//            if let destinationVC = segue.destination as? viewitineraryViewController {
+//                destinationVC.currtag = tagtosend
+//            }
+//        }
+//    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        print("Prepare for segue called with identifier: \(segue.identifier ?? "nil")") // DEBUGGING, DELETE LATER
-        if segue.identifier == "discoverCellToViewSegue" {
+        if segue.identifier == "discovertoview" {
             if let destinationVC = segue.destination as? viewitineraryViewController {
                 destinationVC.currtag = tagtosend
+                destinationVC.numdays = 3
+//                print(tagtosend)
             }
         }
     }
+
 }
