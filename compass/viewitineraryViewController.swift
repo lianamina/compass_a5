@@ -25,6 +25,7 @@ extension viewitineraryViewController: VotingViewControllerDelegate {
 }
 
 class viewitineraryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, VotingViewController.VotingViewControllerDelegate {
+    @IBOutlet weak var tabbarpic: UIImageView!
     
     var resultsView: UIView!
     var flightInfo: String = ""
@@ -49,8 +50,9 @@ class viewitineraryViewController: UIViewController, UITableViewDelegate, UITabl
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
-
+//        tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+        tabbarpic.image = UIImage(named: "tabbarpic")
+        
         let backgroundImageView = UIImageView(frame: self.view.bounds)
         backgroundImageView.image = UIImage(named: "background")
         backgroundImageView.contentMode = .scaleAspectFill

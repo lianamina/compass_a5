@@ -13,6 +13,7 @@ var allActivities: [Int: [Activity]] = [:]
 
 class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
+    @IBOutlet weak var trashwholething: UIImageView!
     var flightInfo: String = ""
     var stayInfo: String = ""
     var eventTitle: String = ""
@@ -26,6 +27,7 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        trashwholething.image = UIImage(systemName: "trash")
         let backgroundImageView = UIImageView(frame: self.view.bounds)
         backgroundImageView.image = UIImage(named: "background")
         backgroundImageView.contentMode = .scaleAspectFill

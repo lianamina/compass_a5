@@ -252,6 +252,28 @@ class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewD
                 print(tagtosend)
             }
         }
+        if segue.identifier == "newitinerary" {
+            if let destinationVC = segue.destination as?
+                EditEventVC {
+                let newtrip = Info(
+                    name: "",
+                    flights: "",
+                    stays: "",
+                    numberOfDays: 1,
+                    startdate: "",
+                    enddate: "",
+                    imagename: "",
+                    activitiesforday: [:],
+                    activitiesforvoting: [],
+                    tag: 234,
+                    numdays: 1,
+                    totalpeople: 0
+                )
+                DataManager.shared.allItineraries.append(newtrip)
+                destinationVC.currtag = 234
+                destinationVC.numdays = 1
+            }
+        }
     }
 
 }
