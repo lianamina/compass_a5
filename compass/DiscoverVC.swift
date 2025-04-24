@@ -19,6 +19,7 @@ class DiscoverVC: UIViewController, UICollectionViewDataSource, UICollectionView
     @IBOutlet weak var collectionView: UICollectionView!
     var tagtosend = 0
     
+    @IBOutlet weak var tabbarpic: UIImageView!
     let itineraries: [DiscoverItinerary] = [
         DiscoverItinerary(title: "Paris Girls' Trip", imageName: "paris"),
         DiscoverItinerary(title: "Surfing in Hawaii", imageName: "hawaii"),
@@ -100,6 +101,7 @@ class DiscoverVC: UIViewController, UICollectionViewDataSource, UICollectionView
     override func viewDidLoad() {
         super.viewDidLoad()
         //need to fill itinerary or append to array of all itineraries
+        tabbarpic.image = UIImage(named: "tabbarpic")
         view.bringSubviewToFront(clickbutton)
         setUpItineraries()
         collectionView.dataSource = self

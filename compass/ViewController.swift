@@ -28,13 +28,16 @@ struct Itinerary: Hashable {
 
 class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewDataSource, UITableViewDelegate {
     
-//    @IBOutlet weak var collectionView: UICollectionView!
+    //    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var tabbarpiv: UIImageView!
     
     @IBOutlet weak var tableView: UITableView!
     var tagtosend = 0
     var currnumdays = 0
     override func viewDidLoad() {
         super.viewDidLoad()
+        tabbarpiv.image = UIImage(named: "tabbarpic")
+
         tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
         
         let backgroundImageView = UIImageView(frame: self.view.bounds)
@@ -50,124 +53,101 @@ class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewD
             backgroundImageView.topAnchor.constraint(equalTo: self.view.topAnchor),
             backgroundImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
-        
-        // hello
-        let activity1 = Activity(title: "Louvre", currentTime: 86400, picture: UIImage(named: "louvre")!, yesVotes: 6, noVotes: 4, didvote: true, notes: "this is my note", time: timeIntervalFromString("10 AM") ?? 0)
-        let activity2 = Activity(title: "Eiffel Tower", currentTime: 86400, picture: UIImage(named: "eiffel")!, yesVotes: 7, noVotes: 3, didvote: false, notes: "this is mt note pt 2 and what is it is really lond ang the contraints cannot hold it and there is a lot of text becasue denise really wants to go to the louvre", time: timeIntervalFromString("7 AM") ?? 0)
+        // Only add sample trips once
+        if DataManager.shared.allItineraries.isEmpty {
+            let activity1 = Activity(title: "Louvre", currentTime: 86400, picture: UIImage(named: "louvre")!, yesVotes: 6, noVotes: 4, didvote: true, notes: "this is my note", time: timeIntervalFromString("10 AM") ?? 0)
+            let activity2 = Activity(title: "Eiffel Tower", currentTime: 86400, picture: UIImage(named: "eiffel")!, yesVotes: 7, noVotes: 3, didvote: false, notes: "this is mt note pt 2...", time: timeIntervalFromString("7 AM") ?? 0)
 
-        let trip1 = Info(
-            name: "Hawaii Family Reunion",
-            flights: "UA123",
-            stays: "Hotel Les Halles",
-            numberOfDays: 5,
-            startdate: "5/15/25",
-            enddate: "5/20/25",
-            imagename: "hawaii",
-            activitiesforday: [1: [activity1], 2: [activity2]],
-            activitiesforvoting: [activity1, activity2],
-            tag: 1,
-            numdays: 5,
-            totalpeople: 12
-        )
-        let trip2 = Info(
-            name: "Bachelorette in Vegas",
-            flights: "UA123",
-            stays: "Hotel Les Halles",
-            numberOfDays: 3,
-            startdate: "6/1/25",
-            enddate: "6/8/25",
-            imagename: "vegas",
-            activitiesforday: [1: [activity1, activity2]],
-            activitiesforvoting: [activity1, activity2],
-            tag: 2,
-            numdays: 3,
-            totalpeople: 20
-        )
-        
-        let trip3 = Info(
-            name: "Lake Tahoe Trip",
-            flights: "UA123",
-            stays: "Hotel Les Halles",
-            numberOfDays: 3,
-            startdate: "7/13/25",
-            enddate: "7/21/25",
-            imagename: "tahoe",
-            activitiesforday: [1: [activity1, activity2]],
-            activitiesforvoting: [activity1, activity2],
-            tag: 3,
-            numdays: 3,
-            totalpeople: 12
-        )
-        let trip4 = Info(
-            name: "Italian Summer",
-            flights: "UA123",
-            stays: "Hotel Les Halles",
-            numberOfDays: 3,
-            startdate: "8/3/25",
-            enddate: "8/17/25",
-            imagename: "rome",
-            activitiesforday: [1: [activity1, activity2]],
-            activitiesforvoting: [activity1, activity2],
-            tag: 4,
-            numdays: 3,
-            totalpeople: 12
-        )
+            let trip1 = Info(name: "Hawaii Family Reunion", flights: "UA123", stays: "Hotel Les Halles", numberOfDays: 5, startdate: "5/15/25", enddate: "5/20/25", imagename: "hawaii", activitiesforday: [1: [activity1], 2: [activity2]], activitiesforvoting: [activity1, activity2], tag: 1, numdays: 5, totalpeople: 12)
+            let trip2 = Info(name: "Bachelorette in Vegas", flights: "UA123", stays: "Hotel Les Halles", numberOfDays: 3, startdate: "6/1/25", enddate: "6/8/25", imagename: "vegas", activitiesforday: [1: [activity1, activity2]], activitiesforvoting: [activity1, activity2], tag: 2, numdays: 3, totalpeople: 20)
+            let trip3 = Info(name: "Lake Tahoe Trip", flights: "UA123", stays: "Hotel Les Halles", numberOfDays: 3, startdate: "7/13/25", enddate: "7/21/25", imagename: "tahoe", activitiesforday: [1: [activity1, activity2]], activitiesforvoting: [activity1, activity2], tag: 3, numdays: 3, totalpeople: 12)
+            let trip4 = Info(name: "Italian Summer", flights: "UA123", stays: "Hotel Les Halles", numberOfDays: 3, startdate: "8/3/25", enddate: "8/17/25", imagename: "rome", activitiesforday: [1: [activity1, activity2]], activitiesforvoting: [activity1, activity2], tag: 4, numdays: 3, totalpeople: 12)
 
-        DataManager.shared.allItineraries.append(trip1)
-        DataManager.shared.allItineraries.append(trip2)
-        DataManager.shared.allItineraries.append(trip3)
-        DataManager.shared.allItineraries.append(trip4)
+            DataManager.shared.allItineraries += [trip1, trip2, trip3, trip4]
+        }
+//        // hello
+//        let activity1 = Activity(title: "Louvre", currentTime: 86400, picture: UIImage(named: "louvre")!, yesVotes: 6, noVotes: 4, didvote: true, notes: "this is my note", time: timeIntervalFromString("10 AM") ?? 0)
+//        let activity2 = Activity(title: "Eiffel Tower", currentTime: 86400, picture: UIImage(named: "eiffel")!, yesVotes: 7, noVotes: 3, didvote: false, notes: "this is mt note pt 2 and what is it is really lond ang the contraints cannot hold it and there is a lot of text becasue denise really wants to go to the louvre", time: timeIntervalFromString("7 AM") ?? 0)
+//
+//        let trip1 = Info(
+//            name: "Hawaii Family Reunion",
+//            flights: "UA123",
+//            stays: "Hotel Les Halles",
+//            numberOfDays: 5,
+//            startdate: "5/15/25",
+//            enddate: "5/20/25",
+//            imagename: "hawaii",
+//            activitiesforday: [1: [activity1], 2: [activity2]],
+//            activitiesforvoting: [activity1, activity2],
+//            tag: 1,
+//            numdays: 5,
+//            totalpeople: 12
+//        )
+//        let trip2 = Info(
+//            name: "Bachelorette in Vegas",
+//            flights: "UA123",
+//            stays: "Hotel Les Halles",
+//            numberOfDays: 3,
+//            startdate: "6/1/25",
+//            enddate: "6/8/25",
+//            imagename: "vegas",
+//            activitiesforday: [1: [activity1, activity2]],
+//            activitiesforvoting: [activity1, activity2],
+//            tag: 2,
+//            numdays: 3,
+//            totalpeople: 20
+//        )
+//        
+//        let trip3 = Info(
+//            name: "Lake Tahoe Trip",
+//            flights: "UA123",
+//            stays: "Hotel Les Halles",
+//            numberOfDays: 3,
+//            startdate: "7/13/25",
+//            enddate: "7/21/25",
+//            imagename: "tahoe",
+//            activitiesforday: [1: [activity1, activity2]],
+//            activitiesforvoting: [activity1, activity2],
+//            tag: 3,
+//            numdays: 3,
+//            totalpeople: 12
+//        )
+//        let trip4 = Info(
+//            name: "Italian Summer",
+//            flights: "UA123",
+//            stays: "Hotel Les Halles",
+//            numberOfDays: 3,
+//            startdate: "8/3/25",
+//            enddate: "8/17/25",
+//            imagename: "rome",
+//            activitiesforday: [1: [activity1, activity2]],
+//            activitiesforvoting: [activity1, activity2],
+//            tag: 4,
+//            numdays: 3,
+//            totalpeople: 12
+//        )
+//
+//        DataManager.shared.allItineraries.append(trip1)
+//        DataManager.shared.allItineraries.append(trip2)
+//        DataManager.shared.allItineraries.append(trip3)
+//        DataManager.shared.allItineraries.append(trip4)
 
-        
-        // Do any additional setup after loading the view.
-//        collectionView.dataSource = self
-//        collectionView.delegate = self
    
         tableView.dataSource = self
         tableView.delegate = self
-        
-        // Enable dynamic row sizing
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 300
-        
         tableView.beginUpdates()
         tableView.endUpdates()
-
-        // Add some extra padding
         tableView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
-            
-        // Add light separator
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        
-        
-        // Configure horizontal layout COLLECTION VIEW
-//            let layout = UICollectionViewFlowLayout()
-//            layout.scrollDirection = .horizontal
-//        
-//        let screenWidth = UIScreen.main.bounds.width
-//        let itemWidth = screenWidth/4 //4 items per row
-//            layout.itemSize = CGSize(width: itemWidth, height: itemWidth+40) // Adjust size as needed
-//            layout.minimumLineSpacing = 16
-//            
-//            collectionView.collectionViewLayout = layout
-//        
-//        self.collectionView.reloadData()
         tableView.reloadData()
     }
     
     func didCreateNewItinerary(_ itinerary: Itinerary) {
         featuredItineraries.append(itinerary)
-        //potentially append to allItineraries too
-//        collectionView.reloadData()
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "itinCellToEditEventVC" {
-//            if let editVC = segue.destination as? EditEventVC {
-//                editVC.delegate = self
-//            }
-//        }
-//    }
+
     func timeIntervalFromString(_ timeString: String) -> TimeInterval? {
         let formatter = DateFormatter()
         formatter.dateFormat = "h a" // handles "9 AM", "5 PM", etc.
@@ -267,7 +247,7 @@ class ViewController: UIViewController,  ItineraryCreationDelegate, UITableViewD
                     activitiesforvoting: [],
                     tag: 234,
                     numdays: 1,
-                    totalpeople: 0
+                    totalpeople: 1
                 )
                 DataManager.shared.allItineraries.append(newtrip)
                 destinationVC.currtag = 234

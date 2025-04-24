@@ -27,7 +27,7 @@ class EditEventVC: UIViewController, UITableViewDelegate, UITableViewDataSource,
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        trashwholething.image = UIImage(systemName: "trash")
+//        trashwholething.image = UIImage(systemName: "trash")
         let backgroundImageView = UIImageView(frame: self.view.bounds)
         backgroundImageView.image = UIImage(named: "background")
         backgroundImageView.contentMode = .scaleAspectFill

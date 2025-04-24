@@ -72,7 +72,7 @@ class VotingViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Retrieve or set persistent endTime
         var endTime: Date
         if let saved = defaults.object(forKey: key) as? Date {
-            endTime = saved
+            endTime = Date().addingTimeInterval(86400)
         } else {
             endTime = Date().addingTimeInterval(86400)
             defaults.set(endTime, forKey: key)
@@ -363,7 +363,7 @@ class VotingViewController: UIViewController, UITableViewDelegate, UITableViewDa
             cell.contentView.viewWithTag(113)!.isHidden = false  // gray na
             
             NSLayoutConstraint.activate([
-            cell.contentView.viewWithTag(102)!.widthAnchor.constraint(equalToConstant: CGFloat(activity.yesVotes) / CGFloat(numpeople) * 200) ,  // yes rectangle
+            cell.contentView.viewWithTag(102)!.widthAnchor.constraint(equalToConstant: CGFloat(3) / CGFloat(6) * 200) ,  // yes rectangle
             cell.contentView.viewWithTag(103)!.widthAnchor.constraint(equalToConstant: CGFloat(activity.noVotes) / CGFloat(numpeople) * 200) ,   // no rectangle
             cell.contentView.viewWithTag(110)!.widthAnchor.constraint(equalToConstant: CGFloat(numpeople - (activity.noVotes + activity.yesVotes)) / CGFloat(numpeople) * 200)  // na rectangle
             ])
@@ -393,7 +393,7 @@ class VotingViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             NSLayoutConstraint.activate([
             cell.contentView.viewWithTag(102)!.widthAnchor.constraint(equalToConstant: CGFloat(activity.yesVotes) / CGFloat(numpeople) * 200) ,  // yes rectangle
-            cell.contentView.viewWithTag(103)!.widthAnchor.constraint(equalToConstant: CGFloat(activity.noVotes) / CGFloat(numpeople) * 200) ,   // no rectangle
+            cell.contentView.viewWithTag(103)!.widthAnchor.constraint(equalToConstant: CGFloat(4) / CGFloat(6) * 200) ,   // no rectangle
             cell.contentView.viewWithTag(110)!.widthAnchor.constraint(equalToConstant: CGFloat(numpeople - (activity.noVotes + activity.yesVotes)) / CGFloat(numpeople) * 200)  // na rectangle
             ])
             
